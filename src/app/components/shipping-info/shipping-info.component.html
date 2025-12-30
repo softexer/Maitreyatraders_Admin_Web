@@ -1,0 +1,54 @@
+<div class="tracking-container">
+  <h3 class="title">Add Tracking details</h3>
+
+  <!-- Courier Name -->
+  <div class="form-group">
+    <label>Courier service Name</label>
+    <input
+      type="text"
+      [(ngModel)]="tracking.courierName"
+      name="courierName"
+      #courier="ngModel"
+      required
+      placeholder="lorem ipsum"
+    />
+    <span class="error" *ngIf="submitted && courier.invalid">
+      Courier service name is required
+    </span>
+  </div>
+
+  <!-- Shipping Date -->
+  <div class="form-group">
+    <label>Shipping Date</label>
+    <input
+      type="date"
+      [(ngModel)]="tracking.shippingDate"
+      name="shippingDate"
+      #date="ngModel"
+      required
+    />
+    <span class="error" *ngIf="submitted && date.invalid">
+      Shipping date is required
+    </span>
+  </div>
+
+  <!-- Tracking ID -->
+  <div class="form-group">
+    <label>Tracking ID</label>
+    <input
+      type="text"
+      [(ngModel)]="tracking.trackingId"
+      name="trackingId"
+      #trackingId="ngModel"
+      required
+      placeholder="8346598q46q9"
+    />
+    <span class="error" *ngIf="submitted && trackingId.invalid">
+      Tracking ID is required
+    </span>
+  </div>
+
+  <button class="btn-add" (click)="addTracking()">
+    Add
+  </button>
+</div>

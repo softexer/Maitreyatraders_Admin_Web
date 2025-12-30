@@ -1,0 +1,41 @@
+
+<div *ngIf="loading" class="app-loading"></div>
+<div>
+  <mat-sidenav-container #sideNavContainer id="sideNavContainer" class="example-container" fixedInViewport="true"
+    (backdropClick)="closeSideNav()">
+    <mat-sidenav #sidenav style="height: 100vh; overflow: auto" (openedStart)="openedStart()"
+      (closedStart)="closedStart()" mode="over" position="end" [disableClose]="false">
+      <button mat-button (click)="openSideNav()">
+        <img src="../assets/cancel.png" alt="Close menu" />
+      </button>
+      <p class="px-4">
+        <mat-nav-list *ngIf="Findurl">
+          <!-- <mat-nav-list> -->
+          <ul class="nav list-unstyled" style="width: 100%;">
+            <li [ngClass]="{'active': isdetailsPage}" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }" (click)="openSideNav()">
+              <a class="nav-link text-decoration-none" [routerLink]="['/admin/dashboard']"
+                routerLinkActive="active">DASHBOARD</a>
+            </li><br />
+          
+          </ul>
+
+        </mat-nav-list>
+      </p>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="bg-white">
+      <div class="header d-flex align-items-center justify-content-between d-block d-md-none" (click)="openSideNav()"
+        *ngIf="Findurl && isMobileView">
+        <div class="company-logo">
+          <!-- <img src="../assets/Aieonkilogo.png" alt="Company Logo" /> -->
+        </div>
+        <div class="menu-icon">
+          <img src="../assets/open-menu.jpg" alt="Open Menu" />
+        </div>
+      </div>
+      <app-sidebar *ngIf="isLoggedIn"></app-sidebar>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

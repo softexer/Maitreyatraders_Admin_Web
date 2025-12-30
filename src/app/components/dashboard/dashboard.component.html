@@ -1,0 +1,217 @@
+<app-header></app-header>
+
+<div class="container-fluid" style="padding-left:20px; padding-right:20px;">
+
+    <div class="row d-flex">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <div class="header-row">
+                <div class="breadcrumb">
+                    <span>Home</span>
+                    <span class="separator">></span>
+                    <span class="active">Dashboard</span>
+                </div>
+                <div></div>
+            </div>
+        </div>
+        <!-- <div class="dashboard-header">
+            <div class="breadcrumb">
+                <span>Home</span>
+                <span class="separator">></span>
+                <span>Dashboard</span>
+            </div>
+            <div class="date-filter">
+                <div class="date-icon">📅</div>
+                <input type="date" [(ngModel)]="fromDate" class="date-input">
+                <span class="date-separator">-</span>
+                <input type="date" [(ngModel)]="toDate" class="date-input">
+            </div>
+        </div> -->
+
+        <div class="statistics-section">
+            <div class="stat-card" *ngFor="let stat of statistics">
+                <div class="stat-title">
+                    {{ stat.title }}
+                </div>
+                <div class="stat-main-row">
+                    <div class="stat-left">
+                        <div class="stat-icon">{{ stat.icon }}</div>
+                        <div class="stat-amount">{{ stat.amount }}</div>
+                    </div>
+                    <div class="stat-percentage">
+                        <span class="arrow">
+                            {{ stat.trend === 'increase' ? '↑' : '↓' }}
+                        </span>
+                        {{ stat.percentage }}%
+                    </div>
+                </div>
+                <div class="stat-comparison">
+                    {{ stat.comparison }}
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chart-section">
+                <div class="section-header">
+                    <h3>Sale Graph</h3>
+                    <div class="period-toggle">
+                        <!-- <button *ngFor="let period of ['Today', 'Week', 'Month', 'Year']"
+                            [class.active]="selectedPeriod === period" (click)="selectPeriod(period)">
+                            {{ period }}
+                        </button> -->
+                        <button *ngFor="let period of periods" [class.active]="selectedPeriod === period"
+                            (click)="selectPeriod(period)">
+                            {{ period }}
+                        </button>
+                    </div>
+                    <div></div>
+                </div>
+
+                <div class="chart-container" style="height: 100%;">
+                    <canvas baseChart [type]="'line'" [data]="lineChartData" [options]="lineChartOptions">
+                    </canvas>
+                </div>
+                <!-- <div class="chart-container">
+                    <div class="chart-y-axis">
+                        <div class="y-label">₹400</div>
+                        <div class="y-label">₹300</div>
+                        <div class="y-label">₹200</div>
+                        <div class="y-label">₹100</div>
+                        <div class="y-label">0</div>
+                    </div>
+                    <div class="chart-area">
+                        <svg viewBox="0 0 600 250" class="chart-svg">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 0,200 L 100,180 L 200,195 L 300,150 L 400,80 L 500,20 L 500,250 L 0,250 Z"
+                                fill="url(#chartGradient)" />
+                            <path d="M 0,200 L 100,180 L 200,195 L 300,150 L 400,80 L 500,20" fill="none"
+                                stroke="#FFD700" stroke-width="3" />
+                        </svg>
+                        <div class="chart-x-axis">
+                            <div class="x-label" *ngFor="let month of chartData.months">{{ month }}</div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="bestsellers-section">
+                <div class="section-header">
+                    <h3>Best Sellers</h3>
+                </div>
+                <div class="bestseller-list">
+                    <div class="bestseller-item" *ngFor="let seller of bestSellers">
+                        <div class="bestseller-image">
+                            <div class="placeholder-image">
+                                <img *ngIf="seller.image" [src]="seller.image" alt="{{ seller.name }}" />
+                            </div>
+                        </div>
+
+                        <div class="bestseller-info">
+                            <div class="bestseller-name">{{ seller.name }}</div>
+                            <div class="bestseller-price">{{ seller.price }}</div>
+                        </div>
+                        <div class="bestseller-stats">
+                            <div class="bestseller-amount">{{ seller.price }}</div>
+                            <div class="bestseller-sales">{{ seller.sales }}</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="report-button">REPORT</button>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-left:15px;padding-right: 15px; padding-top: 10px;">
+
+        <div class="orders-section">
+            <div class="section-header">
+                <h3>Recent Orders</h3>
+            </div>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <!-- <th>
+                            <input type="checkbox" (change)="toggleAllOrders($event)">
+                        </th> -->
+                        <th>Product</th>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Customer Name</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="table-wrapper">
+                <div class="table-scroll-container">
+                    <!-- <div class="table-container"> -->
+                    <table class="orders-table">
+                        <tbody>
+                            <tr *ngFor="let order of recentOrders">
+                                <!-- <td>
+                                    <input type="checkbox" [(ngModel)]="order.selected">
+                                </td> -->
+                                <td>{{ order.product }}</td>
+                                <td>{{ order.orderId }}</td>
+                                <td>{{ order.date }}</td>
+                                <td>
+                                    <div class="customer-info">
+                                        <span class="customer-avatar">{{ order.customerAvatar }}</span>
+                                        <span>{{ order.customerName }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                                        <span class="status-dot"></span>
+                                        {{ order.status }}
+                                    </span>
+                                </td>
+                                <td>{{ order.amount }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="d-flex justify-content-start align-items-center" style="margin-top: 10px">
+            <div class="pagination-controls">
+                <button class="pagination-button" [disabled]="currentPage === 1" (click)="previousPage()"
+                    aria-label="Go to previous page">
+                    <span aria-hidden="true">«</span>
+                </button>
+
+
+                <div class="page-selector merged" (clickOutside)="closeDropdown()">
+                    <input type="number" class="page-input" [formControl]="pageInputControl" (click)="toggleDropdown2()"
+                        (keydown)="onInputKeyDown($event)" (blur)="onPageInputEnter()" [attr.min]="1"
+                        [attr.max]="totalPages" (click)="onPageInputEnter()" />
+
+                    <div class="page-dropdown" *ngIf="isDropdownOpen2" #pageDropdown [ngClass]="dropdownDirection">
+                        <div *ngFor="let page of pageNumbers" class="page-option" [class.active]="page === currentPage"
+                            (click)="goToPage(page)" (blur)="onPageInputEnter()">
+                            {{ page }}
+                        </div>
+                    </div>
+                </div>
+
+                <button class="pagination-button" [disabled]="currentPage === totalPages" (click)="nextPage()"
+                    aria-label="Go to next page">
+                    <span aria-hidden="true">»</span>
+                </button>
+            </div>
+
+            <div class="pagination-info">
+                &nbsp; Page {{ currentPage }} of {{ totalPages }}
+            </div>
+        </div> -->
+
+    </div>
+
+</div>

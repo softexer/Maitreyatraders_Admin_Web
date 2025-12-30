@@ -1,0 +1,69 @@
+<!-- <div class="container-fluid m-0 p-0 bgpad">
+    <div class="row m-0 p-0">
+        <div class="d-flex justify-content-end align-items-center w-100 header-bar">
+            <div class="d-flex align-items-center user-section">
+                <div class="user-img">
+                </div>
+                <div class="d-flex flex-column">
+                    <span class="uname">{{ adminname | slice:0:30 }}</span>
+                    <span class="textad">Admin</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+
+<header class="app-header">
+    <div class="header-right">
+
+        <!-- SEARCH -->
+        <div class="search-wrapper">
+            <img src="../../../assets/Search.png" class="icon" (click)="toggleSearch()" />
+
+            <div class="search-dropdown" *ngIf="showSearch">
+                <div class="search-input">
+                    <input type="text" placeholder="MOCK CHICKEN" />
+                    <span class="close" (click)="showSearch = false">✕</span>
+                </div>
+
+                <div class="search-results">
+                    <div class="result-item">Lorem Ipsum</div>
+                    <div class="result-item">Lorem Ipsum 02</div>
+                    <div class="result-item">Lorem Ipsum</div>
+                    <div class="see-all">See all products</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="icon-wrapper">
+            <img src="../../../assets/notifications.png" class="icon" (click)="toggleNotifications()" />
+
+            <app-notifications *ngIf="showNotifications" (close)="showNotifications = false">
+            </app-notifications>
+        </div>
+
+        <!-- ADMIN DROPDOWN -->
+        <div class="admin-wrapper">
+            <button class="admin-btn" [class.active]="showAdmin" (click)="toggleAdmin()">
+                ADMIN ▾
+            </button>
+
+            <div class="admin-dropdown" *ngIf="showAdmin">
+                <div class="admin-item" (click)="PasswordChng()">
+                    PROFILE <span>
+                        <img src="../../../assets/chevron_forward.png">
+                    </span>
+                </div>
+                <div class="admin-item logout" (click)="signout()">
+                    LOG OUT <span>
+                        <img src="../../../assets/Logout.png">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>

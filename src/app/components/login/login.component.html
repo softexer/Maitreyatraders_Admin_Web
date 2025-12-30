@@ -1,0 +1,54 @@
+<div class="login-container">
+    <div class="login-card">
+        <!-- Logo and Company Name -->
+        <div class="logo-section">
+            <img src="../../../assets/logo.png" alt="Maitreya Traders Logo" class="logo" />
+            <!-- <div class="company-name">
+                <span class="company-main">Maitreya</span>
+                <span class="company-sub">Traders Limited</span>
+            </div> -->
+        </div>
+
+        <!-- Login Heading -->
+        <h2 class="login-title">Login</h2>
+
+        <!-- Forgot Password Link -->
+        <a href="#" class="forgot-password">Forgot your password?</a>
+
+        <!-- Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+            <!-- Username Input -->
+            <div class="form-group">
+                <input type="text" id="username" formControlName="username" placeholder="Username" class="form-input"
+                    [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" />
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group">
+                <input type="password" id="password" formControlName="password" placeholder="Password"
+                    class="form-input"
+                    [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+            </div>
+
+            <!-- Keep me logged in Checkbox -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="remember Me" formControlName="rememberMe" class="checkbox-input" />
+                <label for="rememberMe" class="checkbox-label">Keep me logged in</label>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-button" >
+                <!-- [disabled]="loginForm.invalid || isLoading" -->
+                <span *ngIf="!isLoading">LOGIN</span>
+                <span *ngIf="isLoading">Loading...</span>
+                <img *ngIf="!isLoading" src="../../../assets/arrow_forward.png">
+                
+            </button>
+        </form>
+    </div>
+</div>

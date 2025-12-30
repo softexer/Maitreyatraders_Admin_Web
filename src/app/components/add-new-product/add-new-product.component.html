@@ -1,0 +1,270 @@
+<app-header></app-header>
+
+<div class="product-details-container">
+  <header class="page-header">
+    <h1>Product Details</h1>
+    <div class="breadcrumb">
+      <span>Home</span>
+      <span class="separator">></span>
+      <span>All Products</span>
+      <span class="separator">></span>
+      <span class="active">Add New Product</span>
+    </div>
+  </header>
+
+  <div class="form-wrapper">
+    <div class="left-section">
+      <!-- BASIC DETAILS -->
+      <div class="form-section">
+        <h2>Basic Details</h2>
+
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" [(ngModel)]="formData.basicDetails.productName" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Product Highlights</label>
+          <div class="textarea-wrapper">
+            <textarea [(ngModel)]="formData.basicDetails.productHighlights" class="form-textarea"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Description</label>
+          <div class="textarea-wrapper">
+            <textarea [(ngModel)]="formData.basicDetails.productDescription" class="form-textarea"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select [(ngModel)]="formData.basicDetails.category"
+              (change)="onCategoryChange(formData.basicDetails.category)" class="form-select">
+              <option value="">Select Category</option>
+              <option *ngFor="let cat of categories" [value]="cat">
+                {{ cat }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Sub Category</label>
+            <select [(ngModel)]="formData.basicDetails.subCategory" class="form-select"
+              [disabled]="!subCategories.length">
+              <option value="">Select Sub Category</option>
+              <option *ngFor="let subCat of subCategories" [value]="subCat">
+                {{ subCat }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PRICING -->
+        <h2>Pricing</h2>
+        <div class="pricing-row">
+          <div class="pricing-group">
+            <label>Product Price</label>
+
+            <div class="price-input-wrapper">
+              <!-- Currency Symbol -->
+              <span class="currency-symbol">
+                {{ getCurrencySymbol() }}
+              </span>
+
+              <!-- Amount Input -->
+              <input type="text" class="price-input" [(ngModel)]="formData.pricing.productPrice" placeholder="0.00" />
+
+              <!-- Country / Flag Dropdown -->
+              <select class="flag-select" [(ngModel)]="formData.pricing.currency">
+                <option *ngFor="let curr of currencies" [value]="curr.code">
+                  {{ curr.flag }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Discounted Price -->
+          <div class="pricing-group">
+            <label class="label2">Discounted Price <span class="optional">(Optional)</span></label>
+            <div class="input-box discount">
+              <span class="currency">{{ getCurrencySymbol() }}</span>
+              <input type="text" [(ngModel)]="formData.pricing.discountedPrice" placeholder="0.00" />
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div class="pricing-group">
+            <label>Weight</label>
+            <div class="input-box">
+              <input type="text" [(ngModel)]="formData.pricing.weight" placeholder="0" />
+              <select [(ngModel)]="formData.pricing.weightUnit" class="inline-select">
+                <option *ngFor="let unit of weightUnits" [value]="unit">
+                  {{ unit }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Add button -->
+          <button class="add-btn" (click)="addPricing()">
+            <img src="../../../assets/black_add.png">
+          </button>
+        </div>
+
+        <table class="pricing-table" *ngIf="pricingVariants.length">
+          <thead>
+            <tr>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Weight</th>
+              <th>Tax</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pricingVariants; let i = index">
+              <td>{{ item.currency }} {{ item.productPrice }}</td>
+              <td>
+                {{ item.discountedPrice ? item.currency + ' ' + item.discountedPrice : '-' }}
+              </td>
+              <td>{{ item.weight }} {{ item.weightUnit }}</td>
+              <td>{{ item.taxIncluded ? 'Included' : 'Excluded' }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="padding-top: 15px;padding-bottom: 10px;">
+          <label style=" font-size: 13px; font-weight: 500; color: rgba(2, 51, 55, 1) !important;
+            margin-bottom: 3px; font-family: 'Lato-SemiBold';">Tax Included</label>
+          <div class="radio-group"> <label class="radio-label"> <input type="radio"
+                [(ngModel)]="formData.pricing.taxIncluded" [value]="true" name="taxIncluded" /> <span>Yes</span>
+            </label> <label class="radio-label"> <input type="radio" [(ngModel)]="formData.pricing.taxIncluded"
+                [value]="false" name="taxIncluded" /> <span>No</span> </label> </div>
+        </div>
+
+
+        <!-- EXPIRATION -->
+        <label style=" font-size: 13px;padding-top: 10px;  font-weight: 500; color: rgba(2, 51, 55, 1) !important;
+          margin-bottom: 3px; font-family: 'Lato-SemiBold';">Expiration</label>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start</label>
+            <div class="date-input-group">
+              <input type="date" [(ngModel)]="formData.expiration.startDate" class="form-input" />
+              <span class="calendar-icon">📅</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>End</label>
+            <div class="date-input-group">
+              <input type="date" [(ngModel)]="formData.expiration.endDate" class="form-input" />
+              <span class="calendar-icon">📅</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <h2>Inventory</h2>
+        <div class="checkbox-group">
+          <div class="toggle-switch">
+            <!-- <input type="checkbox" [(ngModel)]="formData.inventory.unlimited" id="unlimited" class="toggle-input" /> -->
+            <input type="checkbox" id="unlimited" class="toggle-input" [(ngModel)]="formData.inventory.unlimited"
+              (change)="onUnlimitedToggle()" />
+            <label for="unlimited" class="toggle-label"></label>
+          </div>
+          <label class="checkbox-text">Unlimited</label>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock Quantity</label>
+            <!-- <input type="text" [(ngModel)]="formData.inventory.stockQuantity" class="form-input" /> -->
+            <input type="text" class="form-input" [(ngModel)]="formData.inventory.stockQuantity"
+              [disabled]="formData.inventory.unlimited"
+              [placeholder]="formData.inventory.unlimited ? 'Unlimited' : 'Enter quantity'" />
+          </div>
+
+          <div class="form-group">
+            <label>Stock Status</label>
+            <select [(ngModel)]="formData.inventory.stockStatus" class="form-select">
+              <option *ngFor="let status of stockStatuses" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" [(ngModel)]="formData.inventory.highlight" id="highlight" class="form-checkbox" />
+          <label for="highlight" class="checkbox-text">Highlight this product in a featured section</label>
+        </div>
+        <div class="form-group" style="text-align: center;">
+          <button class="btn-publish" (click)="publishProduct()">Publish Product</button>
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+    <!-- RIGHT SECTION - IMAGE UPLOAD -->
+    <div class="right-section">
+      <div class="image-upload-section">
+        <h2>Upload Product Image</h2>
+
+        <label class="label-text">Product Image</label>
+
+
+
+
+
+
+
+
+
+
+        <div class="main-image-container">
+          <div class="image-preview">
+            <img *ngIf="mainImagePreview" [src]="mainImagePreview" alt="Product Preview" class="preview-image" />
+            <div *ngIf="!mainImagePreview" class="placeholder-image">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <label class="btn-browse">
+              Browse
+              <input type="file" accept="image/*" (change)="onMainImageSelected($event)" style="display: none" />
+            </label>
+            <button *ngIf="mainImagePreview" class="btn-replace" (click)="removeMainImage()">
+              Replace
+            </button>
+          </div>
+        </div>
+
+        <div class="thumbnails-section">
+          <div class="thumbnails-container">
+            <div *ngFor="let thumbnail of thumbnailPreviews; let i = index" class="thumbnail">
+              <img [src]="thumbnail" [alt]="'Thumbnail ' + (i + 1)" />
+              <button class="btn-remove-thumb" (click)="removeThumbnail(i)">×</button>
+            </div>
+
+            <label class="add-image-box">
+              <span class="plus-icon">+</span>
+              <span class="add-text">Add image</span>
+              <input type="file" accept="image/*" multiple (change)="onThumbnailSelected($event)"
+                style="display: none" />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

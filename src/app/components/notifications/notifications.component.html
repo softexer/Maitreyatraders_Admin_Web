@@ -1,0 +1,25 @@
+<div class="notification-panel">
+  <!-- Header -->
+  <div class="panel-header" (click)="close.emit()">
+    <span>Notifications</span>
+    <button class="close-btn" (click)="close.emit()">✕</button>
+  </div>
+
+  <!-- Notification List -->
+  <div class="notification-list">
+    <div
+      class="notification-item"
+      *ngFor="let n of notifications">
+      <p class="title">{{ n.title }}</p>
+      <p class="amount">₹{{ n.amount }}</p>
+      <p class="date">{{ n.date }}</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="panel-footer">
+    <button class="mark-read" (click)="markAllRead()">
+      ✓ MARK ALL AS READ
+    </button>
+  </div>
+</div>

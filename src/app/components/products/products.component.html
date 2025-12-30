@@ -1,0 +1,126 @@
+<app-header></app-header>
+
+<div class="container-fluid bgpad">
+    <div class="row">
+        <div class="products-container">
+            <div class="products-header">
+                <h1>Discover</h1>
+            </div>
+
+            <div class="category-section">
+                <div class="category-list">
+                    <button *ngFor="let category of categories" [class.active]="isCategoryActive(category)"
+                        class="category-btn" (click)="selectCategory(category)">
+                        <span class="category-icon">{{ category.image }}</span>
+                        <span class="category-name">{{ category.name }}</span>
+                    </button>
+                </div>
+
+                <button class="add-product-btn" (click)="openAddProductModal()">
+                    <span class="plus-icon">
+                        <img src="../../../assets/add-square-04.png">
+                    </span>
+                    Add Product
+                </button>
+            </div>
+
+            <div class="subcategory-section">
+                <div class="subcategory-tabs">
+                    <button *ngFor="let subcategory of subcategories" [class.active]="isSubcategoryActive(subcategory)"
+                        class="subcategory-tab" (click)="selectSubcategory(subcategory)">
+                        {{ subcategory.name }}
+                    </button>
+                </div>
+
+                <div class="search-section">
+                    <input type="text" placeholder="Search your product" [(ngModel)]="searchTerm"
+                        (ngModelChange)="onSearchChange($event)" class="search-input">
+                    <div class="search-icon">🔍</div>
+                </div>
+
+                <div class="table-section">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Product</th>
+                                <th>Sub Category</th>
+                                <th>Created Date</th>
+                                <th>Order</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+                <div class="table-wrapper">
+                    <div class="table-scroll-container">
+                        <div class="table-section">
+                            <table class="products-table">
+                                <tbody>
+                                    <tr *ngFor="let product of products; let i = index">
+                                        <td>{{ ((pagination.currentPage - 1) * pagination.pageSize) + i + 1 }}</td>
+                                        <td>
+                                            <div class="product-cell">
+                                                <span class="product-image">{{ product.image }}</span>
+                                                <span>{{ product.name }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ getSubcategoryName(product.subcategoryId) }}</td>
+                                        <td>{{ formatDate(product.createdDate) }}</td>
+                                        <td>{{ product.orderCount }}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="edit-btn" title="Edit" (click)="editProduct(product)">
+                                                    ✏️
+                                                </button>
+                                                <button class="delete-btn" title="Delete"
+                                                    (click)="deleteProduct(product.id)">
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div *ngIf="products.length === 0" class="no-products">
+                                <p>No products found</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination-section">
+                    <button class="pagination-btn prev-btn" [disabled]="pagination.currentPage === 1"
+                        (click)="previousPage()">
+                        ← Previous
+                    </button>
+
+                    <div class="page-numbers">
+                        <button *ngFor="let pageNum of getPageNumbers()" [class.active]="isPageActive(pageNum)"
+                            class="page-btn" (click)="goToPage(pageNum)">
+                            {{ pageNum }}
+                        </button>
+
+                        <span class="page-dots"
+                            *ngIf="getPageNumbers()[getPageNumbers().length - 1] < pagination.totalPages">
+                            ....
+                        </span>
+
+                        <button *ngIf="getPageNumbers()[getPageNumbers().length - 1] < pagination.totalPages"
+                            class="page-btn" (click)="goToPage(pagination.totalPages)">
+                            {{ pagination.totalPages }}
+                        </button>
+                    </div>
+
+                    <button class="pagination-btn next-btn"
+                        [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+                        Next →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

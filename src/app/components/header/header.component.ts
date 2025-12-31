@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef, } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private eRef: ElementRef
   ) { }
 
 
@@ -59,28 +60,41 @@ export class HeaderComponent implements OnInit {
   showSearch = false;
   showNotifications = false;
   showAdmin = false;
-
-  toggleSearch() {
-    this.showSearch = !this.showSearch;
+  searchText: string = "";
+  
+  closeAll() {
+    this.showSearch = false;
     this.showNotifications = false;
     this.showAdmin = false;
   }
+  closeSearch() {
 
-  // toggleNotifications() {
-  //   this.showNotifications = !this.showNotifications;
-  //   this.showSearch = false;
-  //   this.showAdmin = false;
-  // }
+  }
+
+  // 🔴 Detect click outside
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: MouseEvent) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.closeAll();
+    }
+  }
+
+  toggleSearch() {
+    this.closeAll();
+    this.showSearch = !this.showSearch;
+  }
+
 
   toggleAdmin() {
+
+    this.closeAll();
     this.showAdmin = !this.showAdmin;
-    this.showSearch = false;
-    this.showNotifications = false;
   }
 
   toggleNotifications() {
-      this.showSearch = false;
-    this.showAdmin = false;
+
+
+    this.closeAll();
     this.showNotifications = !this.showNotifications;
     // let dialogRef = this.dialog.open(NotificationsComponent, {
     //   panelClass: 'col-md-3',
@@ -89,7 +103,7 @@ export class HeaderComponent implements OnInit {
     //   // data: nav_data,
     // });
 
-  let dialogRef = this.dialog.open(NotificationsComponent, {
+    let dialogRef = this.dialog.open(NotificationsComponent, {
       width: '320px',
       panelClass: 'notification-dialog',
       backdropClass: 'transparent-backdrop',
@@ -120,14 +134,12 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  signout(){
-      this.router.navigateByUrl('/admin/signout')
+  signout() {
+    this.router.navigateByUrl('/admin/signout')
   }
-  PasswordChng(){
-     this.showSearch = false;
-    this.showAdmin = false;
-    this.showNotifications = false;
-     let dialogRef = this.dialog.open(ChangepasswrdComponent, {
+  PasswordChng() {
+    this.closeAll();
+    let dialogRef = this.dialog.open(ChangepasswrdComponent, {
       width: '320px',
       panelClass: 'notification-dialog',
       backdropClass: 'transparent-backdrop',

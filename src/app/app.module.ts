@@ -40,6 +40,8 @@ import { AddNewProductComponent } from './components/add-new-product/add-new-pro
 import { ShippingInfoComponent } from './components/shipping-info/shipping-info.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { ChangepasswrdComponent } from './components/changepasswrd/changepasswrd.component';
+import { CategoriesAllComponent } from './components/categories-all/categories-all.component';
+import { CategoryAddComponent } from './components/category-add/category-add.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import { ChangepasswrdComponent } from './components/changepasswrd/changepasswrd
     ShippingInfoComponent,
     NotificationsComponent,
     ChangepasswrdComponent,
+    CategoriesAllComponent,
+    CategoryAddComponent,
   ],
   imports: [
     BrowserModule,

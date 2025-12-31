@@ -14,7 +14,7 @@
 
                 <img *ngIf="!showCurrentPwd" src="../../../assets/eye-closed.png" alt="Show password">
 
-                <img *ngIf="showCurrentPwd" src="../../../assets/eye-closed.png" alt="Hide password">
+                <img *ngIf="showCurrentPwd" src="../../../assets/eye-open.png" alt="Hide password">
             </span>
         </div>
 
@@ -40,7 +40,7 @@
             <span class="eye-icon" (click)="showNewPwd = !showNewPwd" [class.error-eye]="submitted && newPwd.invalid">
 
                 <img *ngIf="!showNewPwd" src="../../../assets/eye-closed.png">
-                <img *ngIf="showNewPwd" src="../../../assets/eye-closed.png">
+                <img *ngIf="showNewPwd" src="../../../assets/eye-open.png">
             </span>
         </div>
 
@@ -70,7 +70,7 @@
                 [class.error-eye]="submitted && confirmPwd.invalid">
 
                 <img *ngIf="!showConfirmPwd" src="../../../assets/eye-closed.png">
-                <img *ngIf="showConfirmPwd" src="../../../assets/eye-closed.png">
+                <img *ngIf="showConfirmPwd" src="../../../assets/eye-open.png">
             </span>
         </div>
 

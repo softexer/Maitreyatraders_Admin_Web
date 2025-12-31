@@ -19,8 +19,8 @@
     <div class="header-right">
 
         <!-- SEARCH -->
-        <div class="search-wrapper">
-            <img src="../../../assets/Search.png" class="icon" (click)="toggleSearch()" />
+        <!-- <div class="search-wrapper">
+            <img src="../../../assets/Search.png" class="icon" (click)="toggleSearch(); $event.stopPropagation()" />
 
             <div class="search-dropdown" *ngIf="showSearch">
                 <div class="search-input">
@@ -35,11 +35,30 @@
                     <div class="see-all">See all products</div>
                 </div>
             </div>
+        </div> -->
+
+
+        <div class="search-wrapper">
+
+            <!-- SEARCH ICON -->
+            <img *ngIf="!showSearch" src="../../../assets/Search.png" class="icon" (click)="toggleSearch()" />
+
+            <!-- INLINE SEARCH (NOT DESTROYED) -->
+            <div class="search-inline" [class.show]="showSearch">
+                <img src="../../../assets/Search.png" class="icon small" />
+
+                <input type="text" [(ngModel)]="searchText" name="searchText" placeholder="Search products" />
+
+                <img src="../../../assets/close.png" class="icon small close-icon" (click)="closeSearch()" />
+            </div>
+
         </div>
+
 
         <!-- NOTIFICATIONS -->
         <div class="icon-wrapper">
-            <img src="../../../assets/notifications.png" class="icon" (click)="toggleNotifications()" />
+            <img src="../../../assets/notifications.png" class="icon"
+                (click)="toggleNotifications(); $event.stopPropagation()" />
 
             <app-notifications *ngIf="showNotifications" (close)="showNotifications = false">
             </app-notifications>
@@ -47,7 +66,7 @@
 
         <!-- ADMIN DROPDOWN -->
         <div class="admin-wrapper">
-            <button class="admin-btn" [class.active]="showAdmin" (click)="toggleAdmin()">
+            <button class="admin-btn" [class.active]="showAdmin" (click)="toggleAdmin(); $event.stopPropagation()">
                 ADMIN ▾
             </button>
 

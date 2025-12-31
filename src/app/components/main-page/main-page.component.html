@@ -18,9 +18,10 @@
                     <li [ngClass]="{'active': isdetailsPage}" routerLinkActive="active" class="nav-item"
                         [routerLinkActiveOptions]="{ exact: true }" (click)="openSideNav()">
                         <a class="nav-link text-decoration-none" [routerLink]="['/admin/dashboard']"
-                            routerLinkActive="active"   #rla="routerLinkActive">
+                            routerLinkActive="active" #rla="routerLinkActive">
                             <div class="d-flex align-items-center">
-                                <img [src]="rla.isActive ? '../../../assets/dash_av.png' : '../../../assets/dash_inact.png'" style="margin-right: 4px;" />
+                                <img [src]="rla.isActive ? '../../../assets/dash_av.png' : '../../../assets/dash_inact.png'"
+                                    style="margin-right: 4px;" />
                                 <span>Dashboard</span>
                             </div>
                         </a>
@@ -30,9 +31,10 @@
                     <li routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }"
                         (click)="openSideNav()">
                         <a class="nav-link text-decoration-none" [routerLink]="['/admin/orders']"
-                            routerLinkActive="active"   #rlaOrder="routerLinkActive">
+                            routerLinkActive="active" #rlaOrder="routerLinkActive">
                             <div class="d-flex align-items-center">
-                                  <img [src]="rlaOrder.isActive ? '../../../assets/ordr_act.png' : '../../../assets/ordr_in.png'" style="margin-right: 4px;" />
+                                <img [src]="rlaOrder.isActive ? '../../../assets/ordr_act.png' : '../../../assets/ordr_in.png'"
+                                    style="margin-right: 4px;" />
                                 <span>Order List</span>
                             </div>
                         </a>
@@ -41,23 +43,26 @@
                     <li routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }"
                         (click)="openSideNav()">
                         <a class="nav-link text-decoration-none" [routerLink]="['/admin/products']"
-                            routerLinkActive="active"  #rlaPro="routerLinkActive">
+                            routerLinkActive="active" #rlaPro="routerLinkActive">
                             <div class="d-flex align-items-center">
-                                <img [src]="rlaPro.isActive ? '../../../assets/alb_act.png' : '../../../assets/alb_in.png'" style="margin-right: 4px;" />
+                                <img [src]="rlaPro.isActive ? '../../../assets/alb_act.png' : '../../../assets/alb_in.png'"
+                                    style="margin-right: 4px;" />
                                 <span>All Products</span>
                             </div>
                         </a>
                     </li>
 
-                    <!-- <li routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }"
+                    <li routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }"
                         (click)="openSideNav()">
-                        <a class="nav-link text-decoration-none" [routerLink]="['/admin/logout']"
-                            routerLinkActive="active">
+                        <a class="nav-link text-decoration-none" [routerLink]="['/admin/categories']"
+                            routerLinkActive="active" #rlaCat="routerLinkActive">
                             <div class="d-flex align-items-center">
-                                <span>Logout</span>
+                                <img [src]="rlaCat.isActive ? '../../../assets/alb_act.png' : '../../../assets/alb_in.png'"
+                                    style="margin-right: 4px;" />
+                                <span>Categories</span>
                             </div>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>

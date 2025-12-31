@@ -1,47 +1,47 @@
 .bgpad {
-    background-color: white;
-    border-radius: 16px;
-    padding: 10px;
-   
-  }
-  
-  .greeting h1 {
-    font-size: 20px;
-    font-weight: 400;
-    font-family: 'Montserrat', sans-serif;
-    padding: 25px 0;
-    border-bottom: 1px solid #F7F9FC;
-    color: #2E3A59;
-  }
+  /* background-color: white; */
+  /* border-radius: 16px; */
+  padding: 10px;
+
+}
+
+.greeting h1 {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
+  padding: 25px 0;
+  border-bottom: 1px solid #F7F9FC;
+  color: #2E3A59;
+}
 
 
-  .conTxt {
-    font-family: 'Inter';
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 32px;
-    text-align: center;
-    padding-top: 20px;
-    color:#2E3A59;
-    
-  }
-  .confirmTxt {
+.conTxt {
+  font-family: 'Lato-SemiBold';
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  text-align: center;
+  padding-top: 20px;
+  color: #2E3A59;
 
-    font-family: 'Montserrat';
-font-size: 24px;
-font-weight: 700;
-line-height: 32px;
-text-align: center;
+}
 
-  }
+.confirmTxt {
+  font-size: 24px;
+  line-height: 32px;
+  text-align: center;
 
-  
+  font-family: 'Lato-Bold';
+
+}
+
+
 .gocarScroll {
-  height: 100%; 
-  max-height: 230vh; 
+  height: 100%;
+  max-height: 230vh;
   overflow-y: auto;
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .gocarScroll::-webkit-scrollbar {
@@ -50,12 +50,12 @@ text-align: center;
 
 @media (max-width: 1440px) {
   .gocarScroll {
-    max-height: 85vh; 
+    max-height: 85vh;
   }
 }
 
 @media (max-width: 1280px) {
   .gocarScroll {
-    max-height: 80vh; 
+    max-height: 80vh;
   }
 }

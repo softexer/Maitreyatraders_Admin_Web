@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { ProductsComponent } from './components/products/products.component';
 import { AddNewProductComponent } from './components/add-new-product/add-new-product.component';
+import { CategoriesAllComponent } from './components/categories-all/categories-all.component';
 import { SingoutComponent } from './components/singout/singout.component';
 
 const routes: Routes = [
@@ -15,10 +16,10 @@ const routes: Routes = [
       { path: "dashboard", component: DashboardComponent },
       { path: "orders", component: OrdersComponent },
       { path: "products", component: ProductsComponent },
-       { path: "products/:id", component: AddNewProductComponent },
-       
-        { path: "signout", component: SingoutComponent },
-    
+      { path: "products/:id", component: AddNewProductComponent },
+      { path: "categories", component: CategoriesAllComponent },
+      { path: "signout", component: SingoutComponent },
+
 
     ]
   },

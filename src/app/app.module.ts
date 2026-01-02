@@ -42,6 +42,8 @@ import { NotificationsComponent } from './components/notifications/notifications
 import { ChangepasswrdComponent } from './components/changepasswrd/changepasswrd.component';
 import { CategoriesAllComponent } from './components/categories-all/categories-all.component';
 import { CategoryAddComponent } from './components/category-add/category-add.component';
+import { PromotionsComponent } from './components/promotions/promotions.component';
+import { OfferCardComponent } from './components/offer-card/offer-card.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { CategoryAddComponent } from './components/category-add/category-add.com
     ChangepasswrdComponent,
     CategoriesAllComponent,
     CategoryAddComponent,
+    PromotionsComponent,
+    OfferCardComponent,
   ],
   imports: [
     BrowserModule,

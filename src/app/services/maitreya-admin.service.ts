@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class MaitreyaAdminService {
-  public baseUrl: string = "http://192.168.1.16:3000";
+  public baseUrl: string = "http://18.205.217.76:3000";
   public userID: string = "";
   public checkIsLoggedIn = new BehaviorSubject(false);
   public Signout = new BehaviorSubject(false);
@@ -30,7 +30,24 @@ export class MaitreyaAdminService {
     );
   }
 
-  
+  //signout
+  SignoutApi(data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/admin/signout`,
+      data,
+      // { headers: { trimandcut: token } }
+    );
+  }
+
+  //chgPWD
+  ChangePWD(data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/admin/changepassword`,
+      data,
+      // { headers: { trimandcut: token } }
+    );
+  }
+
   //Dashboard
   GetDashboard(data: any): Observable<any> {
     return this.http.post(
@@ -40,27 +57,34 @@ export class MaitreyaAdminService {
     );
   }
 
-
-  //homepage Products
-  // HomepageData(): Observable<any> {
-  //   return this.http.get(`${this.baseUrl}/api/product/customerhomepage`);
-  // }
-
-  // //homepage Cats
-  // LoadAllCategories(): Observable<any> {
-  //   return this.http.get(`${this.baseUrl}/api/product/fetchcategories`);
-  // }
-
-  // //homepage Cats
-  // GetProducts_Of_Subcats(data: any): Observable<any> {
-  //   return this.http.post(
-  //     `${this.baseUrl}/api/product/productlist`,
-  //     data,
-  //     // { headers: { aieonki: token } }
-  //   );
-  // }
+  //Orders
+  GetAllOrders(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/admin/orderslist`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
 
 
+  //tracking
+  AddTracking(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/admin/addtrackingdetails`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+
+   //CategoryFetch
+  GetAllCats(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/categories/fetchcategorys`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
 
 
 }

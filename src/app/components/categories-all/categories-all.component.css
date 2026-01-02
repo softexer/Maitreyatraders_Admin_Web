@@ -1,22 +1,22 @@
 .category-page {
- padding-top: 5px;
- padding-left: 20px;
- padding-right: 20px;
- padding-bottom: 2px;
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 2px;
 }
 
 .title {
-    color: rgba(2, 51, 55, 1);
-    margin: 0;
-    font-family: 'Lato-Bold';
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 100%;
-    letter-spacing: 0.5%;
+  color: rgba(2, 51, 55, 1);
+  margin: 0;
+  font-family: 'Lato-Bold';
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0.5%;
 }
 
 .add-btn {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 /* TABS */
@@ -28,10 +28,10 @@
   display: flex;
   gap: 10px;
   font-size: 13px;
-    /* color: rgba(120, 120, 119, 1); */
-    white-space: nowrap;
-    transition: all 0.2s;
-    font-family: 'Open-semibold';
+  /* color: rgba(120, 120, 119, 1); */
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'Open-semibold';
 }
 
 .add-btn {
@@ -40,47 +40,47 @@
 }
 
 .tab-btn {
-    padding: 5px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(188, 184, 184, 1);
-    background: rgba(255, 255, 255, 1);
-    color: rgba(120, 120, 119, 1);
-    cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(188, 184, 184, 1);
+  background: rgba(255, 255, 255, 1);
+  color: rgba(120, 120, 119, 1);
+  cursor: pointer;
 
 }
 
 .tab-btn.active {
-    background: white;
-    color: rgba(35, 35, 33, 1);
-    border: 1px solid rgba(0, 0, 0, 1);
+  background: white;
+  color: rgba(35, 35, 33, 1);
+  border: 1px solid rgba(0, 0, 0, 1);
 }
 
 .add-product-btn {
-    padding: 6px 20px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-    font-family: 'Lato-Bold';
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 100%;
-    letter-spacing: 1.5%;
+  padding: 6px 20px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-family: 'Lato-Bold';
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 100%;
+  letter-spacing: 1.5%;
 }
 
 .add-product-btn:hover {
-    background: #333;
+  background: #333;
 }
 
 .plus-icon {
-    font-size: 15px;
-    /* font-weight: bold; */
+  font-size: 15px;
+  /* font-weight: bold; */
 }
 
 .add-btn {
@@ -94,20 +94,21 @@
 
 
 /* CARD */
-.hrtag{
-     font-family: 'Open-semibold';
-     font-size: 14px;
-     color:rgba(35, 35, 33, 1);
-     letter-spacing: 0px;
+.hrtag {
+  font-family: 'Open-semibold';
+  font-size: 14px;
+  color: rgba(35, 35, 33, 1);
+  letter-spacing: 0px;
 }
+
 .subcategory-card {
-    border-radius: 14px;
-    border: none;
+  border-radius: 14px;
+  border: none;
 }
 
 /* ADD SUBCATEGORY */
 .add-subcategory input {
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 /* SUBCATEGORY ITEM */
@@ -119,7 +120,8 @@
   color: rgba(106, 113, 127, 1);
   border-radius: 10px;
   width: 100%;
-  overflow: hidden; /* KEY */
+  overflow: hidden;
+  /* KEY */
   font-family: 'Lato-SemiBold';
   font-size: 12px;
 }
@@ -127,7 +129,8 @@
 /* TEXT HANDLING */
 .subcategory-text {
   flex: 1;
-  min-width: 0; /* MOST IMPORTANT FIX */
+  min-width: 0;
+  /* MOST IMPORTANT FIX */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -137,13 +140,15 @@
 /* ACTION ICONS */
 .actions {
   display: flex;
-  flex-shrink: 0; /* prevents shrinking */
+  flex-shrink: 0;
+  /* prevents shrinking */
   gap: 10px;
 }
 
 
 .action-icon {
-  width: 14px;     /* 🔥 control size here */
+  width: 14px;
+  /* 🔥 control size here */
   height: 14px;
   cursor: pointer;
   opacity: 0.75;
@@ -158,13 +163,15 @@
   flex-direction: column;
   height: calc(100vh - 300px);
   background-color: #fff;
-  overflow: hidden; /* KEY */
+  overflow: hidden;
+  /* KEY */
 }
 
 .table-scroll-container {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden; /* KEY */
-  padding-right: 5px; /* avoids scrollbar overlap */
+  overflow-x: hidden;
+  /* KEY */
+  padding-right: 5px;
+  /* avoids scrollbar overlap */
 }
-

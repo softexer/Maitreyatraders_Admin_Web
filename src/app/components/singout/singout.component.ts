@@ -14,6 +14,7 @@ import { MaitreyaAdminService } from 'src/app/services/maitreya-admin.service';
 export class SingoutComponent implements OnInit {
   user: any;
   isLoggedIn: boolean = false;
+  device: any
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -35,7 +36,7 @@ export class SingoutComponent implements OnInit {
     }
   }
 
- 
+
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
@@ -46,38 +47,42 @@ export class SingoutComponent implements OnInit {
     this.router.navigateByUrl('/admin/dashboard');
   }
   submit() {
-    // let payload = {
-    //   userID: this.user.userID,
-    //   deviceID: this.user.deviceID,
-    //   deviceToken: this.user.deviceToken,
-    //   deviceType: "web"
-    // }
-    // console.log(payload)
-    // let token = localStorage.getItem('token');
-    // this.AdminService.showLoader.next(true);
-    // this.AdminService.LogOut(payload, token).subscribe((res: any) => {
-    //   console.log(res)
-    //   if (res.response === 3) {
-    //     this.isLoggedIn = false;
-    //     this.AdminService.showLoader.next(false);
-    //     this.AdminService.Signout.next(true);
-    //     this.cdr.detectChanges();
-    //     localStorage.clear();
-    //     localStorage.removeItem('gogouser');
-    //     localStorage.removeItem('token');
-    //     this.router.navigateByUrl("/login");
-    //   }
-    //   else {
-    //     this.AdminService.showLoader.next(false);
-    //   }
-    // }, (err: HttpErrorResponse) => {
-    //   this.openSnackBar(err.message, "");
-    //   this.AdminService.showLoader.next(false);
-    //   if (err.error instanceof Error) {
-    //     console.warn("CSError", err.error)
-    //   } else {
-    //     console.warn("SSError", err.error)
-    //   }
-    // })
+    let obj = localStorage.getItem('deviceobj');
+    if (obj) {
+      this.device = JSON.parse(obj);
+    }
+    let payload = {
+      adminuniqueID: this.user.adminuniqueID,
+      deviceID: this.device.deviceID,
+      deviceToken: this.device.deviceToken,
+      deviceType: "web"
+    }
+    console.log(payload)
+    let token = localStorage.getItem('token');
+    this.AdminService.showLoader.next(true);
+    this.AdminService.SignoutApi(payload).subscribe((res: any) => {
+      console.log(res)
+      if (res.response === 3) {
+        this.isLoggedIn = false;
+        this.AdminService.showLoader.next(false);
+        this.AdminService.Signout.next(true);
+        // this.cd.detectChanges();
+        localStorage.clear();
+        localStorage.removeItem('MAdmin');
+        localStorage.removeItem('token');
+        this.router.navigateByUrl("/login");
+      }
+      else {
+        this.AdminService.showLoader.next(false);
+      }
+    }, (err: HttpErrorResponse) => {
+      this.openSnackBar(err.message, "");
+      this.AdminService.showLoader.next(false);
+      if (err.error instanceof Error) {
+        console.warn("CSError", err.error)
+      } else {
+        console.warn("SSError", err.error)
+      }
+    })
   }
 }

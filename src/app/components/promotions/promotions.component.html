@@ -1,0 +1,118 @@
+<app-header></app-header>
+<div class="promotions-container">
+
+    <!-- Header -->
+    <div class="header-row">
+        <h3>Promotions</h3>
+    </div>
+
+    <!-- Search + Add Button -->
+    <div class="card subcategory-card ">
+        <div class="top-controls">
+            <div></div>
+
+            <button class="add-product-btn" (click)="AddNewOffer()">
+                <span class="plus-icon">
+                    <img src="../../../assets/add-square-04.png">
+                </span>
+                Add New Offer
+            </button>
+        </div>
+
+        <div class="col-md-12">
+            <div class="search-box">
+                <input type="text" placeholder="Search" [(ngModel)]="searchText" />
+                <img src="../../../assets/Search.png" />
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-section" style="margin-top: 10px;">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Offer</th>
+                        <th>Created Date</th>
+                        <th>Status</th>
+                        <th class="action-col">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-wrapper">
+            <div class="table-scroll-container">
+                <table class="products-table">
+                    <tbody>
+                        <tr *ngFor="let promo of promotions; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ promo.offer }}</td>
+                            <td>{{ promo.date }}</td>
+
+                            <td>
+                                <span class="status" [class.active]="promo.status === 'Active'"
+                                    [class.deactive]="promo.status === 'Deactive'">
+                                    {{ promo.status }}
+                                </span>
+                            </td>
+
+                            <td class="action-col">
+                                <div class="action-wrapper">
+                                    <span class="dots" (click)="toggleMenu(i, $event)">⋮</span>
+
+                                    <div class="actionmenu" *ngIf="openIndex === i"
+                                        [class.actionmenu-up]="i >= promotions.length - 2">
+                                        <div class="action-item" (click)="view(promo)">
+                                            View </div>
+                                        <div class="action-item" (click)="edit(promo)">
+                                            Edit </div>
+                                        <div class="action-item" (click)="deactivate(promo)">
+                                            Deactivate </div>
+                                        <div class="action-item" (click)="delete(promo)">
+                                            Delete </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div *ngIf="promotions.length === 0" class="no-products">
+                    <p>No Promotions found</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination-section">
+            <button class="pagination-btn prev-btn" [disabled]="pagination.currentPage === 1" (click)="previousPage()">
+                ← Previous
+            </button>
+
+            <div class="page-numbers">
+                <button *ngFor="let pageNum of getPageNumbers()" [class.active]="isPageActive(pageNum)" class="page-btn"
+                    (click)="goToPage(pageNum)">
+                    {{ pageNum }}
+                </button>
+
+                <span class="page-dots" *ngIf="getPageNumbers()[getPageNumbers().length - 1] < pagination.totalPages">
+                    ....
+                </span>
+
+                <button *ngIf="getPageNumbers()[getPageNumbers().length - 1] < pagination.totalPages" class="page-btn"
+                    (click)="goToPage(pagination.totalPages)">
+                    {{ pagination.totalPages }}
+                </button>
+            </div>
+
+            <button class="pagination-btn next-btn" [disabled]="pagination.currentPage === pagination.totalPages"
+                (click)="nextPage()">
+                Next →
+            </button>
+        </div>
+
+    </div>
+
+
+</div>

@@ -33,7 +33,7 @@ export class ShippingInfoComponent implements OnInit {
   editable: boolean = false;
   hdr: string = '';
   hdr2: string = '';
-   tracking = {
+  tracking = {
     courierName: '',
     shippingDate: '',
     trackingId: ''
@@ -49,25 +49,34 @@ export class ShippingInfoComponent implements OnInit {
 
   }
 
- 
+  ngOnInit(): void {
+  }
+
 
   addTracking() {
     this.submitted = true;
-
     if (!this.tracking.courierName ||
-        !this.tracking.shippingDate ||
-        !this.tracking.trackingId) {
+      !this.tracking.shippingDate ||
+      !this.tracking.trackingId) {
       return;
     }
-
+    const formattedDate = this.formatDate(this.tracking.shippingDate);
     console.log('Tracking Details:', this.tracking);
-
-    // API call here
-    // this.orderService.addTracking(this.tracking).subscribe()
-
+    let obj = {
+      submitted: this.submitted,
+      cname: this.tracking.courierName,
+      shipdate: formattedDate,
+      id: this.tracking.trackingId
+    }
+    this.dialogRef.close(obj)
     this.submitted = false; // reset
   }
 
-  ngOnInit(): void {
+  formatDate(date: string): string {
+    if (!date) return '';
+
+    const [year, month, day] = date.split('-');
+    return `${day}-${month}-${year}`;
   }
+
 }

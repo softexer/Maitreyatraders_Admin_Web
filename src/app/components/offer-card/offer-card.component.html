@@ -1,0 +1,141 @@
+<div class="add-offer-card">
+    <h3 class="title" *ngIf="viewtype === 'edit'">Update New Offer</h3>
+    <h3 class="title" *ngIf="viewtype === 'add'">Add New Offer</h3>
+    <h3 class="title" *ngIf="viewtype === 'view'">View New Offer</h3>
+    <form>
+
+        <!-- Offer Type -->
+        <div class="row">
+            <div class="col-md-12">
+                <label>Offer Type / Name</label>
+                <!-- <select class="form-control" [(ngModel)]="offer.offerType" name="offerType">
+                    <option value="">Select Offer Type</option>
+                    <option *ngFor="let type of offerTypes" [value]="type">
+                        {{ type }}
+                    </option>
+                </select> -->
+                <div class="select-wrapper">
+                    <select class="form-control" [(ngModel)]="offer.offerType" name="offerType">
+                        <option value="">Select Offer Type</option>
+                        <option *ngFor="let type of offerTypes" [value]="type">
+                            {{ type }}
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Buy / Get Quantity -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Buy Quantity</label>
+                <input type="number" class="form-control" [(ngModel)]="offer.buyQty" name="buyQty">
+            </div>
+
+            <div class="col-md-6">
+                <label>Get Quantity</label>
+                <input type="number" class="form-control" [(ngModel)]="offer.getQty" name="getQty">
+            </div>
+        </div>
+
+        <!-- Category / Subcategory -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Select Category (applicable)</label>
+                <!-- <select class="form-control" [(ngModel)]="offer.category" name="category" (change)="onCategoryChange()">
+                    <option value="">All</option>
+                    <option *ngFor="let cat of categories" [value]="cat.name">
+                        {{ cat.name }}
+                    </option>
+                </select> -->
+                <div class="select-wrapper">
+                    <select class="form-control" [(ngModel)]="offer.category" name="category"
+                        (change)="onCategoryChange()">
+                        <option value="">All</option>
+                        <option *ngFor="let cat of categories" [value]="cat.name">
+                            {{ cat.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label>Select Sub Category</label>
+                <!-- <select class="form-control" [(ngModel)]="offer.subCategory" name="subCategory">
+                    <option value="">Select Sub Category</option>
+                    <option *ngFor="let sub of subCategories">
+                        {{ sub }}
+                    </option>
+                </select> -->
+                <div class="select-wrapper">
+                    <select class="form-control" [(ngModel)]="offer.subCategory" name="subCategory"
+                        (change)="onCategoryChange()">
+                        <option value="">Select Sub Category</option>
+                        <option *ngFor="let sub of subCategories">
+                            {{ sub }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Free Product -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <label>Select Free Product</label>
+                <select class="form-control" [(ngModel)]="offer.freeProduct" name="freeProduct">
+                    <option *ngFor="let product of products">
+                        {{ product }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Banner Upload -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <label>Add Advertisement Image</label>
+
+                <div class="image-upload" (click)="fileInput.click()">
+                    <input type="file" hidden #fileInput (change)="onImageUpload($event)">
+                    <img *ngIf="imagePreview" [src]="imagePreview">
+                    <span *ngIf="!imagePreview">+</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <!-- <div class="actions mt-4">
+            <button type="button" class="btn cancel" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn add" (click)="submit()">Add</button>
+        </div> -->
+
+        <div class="d-flex justify-content-center pb-3 mt-3 pt-2" *ngIf="viewtype === 'edit'">
+            <button mat-raised-button (click)="cancel()"
+                style="font-family: 'Lato-SemiBold'; font-size: 14px; font-weight: 500;letter-spacing: 0px;border-radius: 8px;
+                 line-height: 32px;text-align: center; background-color:white;color: rgba(0, 0, 0, 1); border:1px solid rgba(0, 0, 0, 1)">
+                &nbsp; &nbsp; Cancel &nbsp; &nbsp;</button>&nbsp; &nbsp;
+            <button mat-raised-button (click)="submit()" class="text-white hover" style="font-family: 'Lato-SemiBold';font-size: 14px; font-weight: 500;letter-spacing: 0px;border-radius: 8px;
+                line-height: 32px; text-align: center;background-color:black;color: #FFFFFF;">
+                &nbsp; &nbsp;Add &nbsp; &nbsp;</button>&nbsp;
+        </div>
+        <div class="d-flex justify-content-center pb-3 mt-3 pt-2" *ngIf="viewtype === 'add'">
+            <button mat-raised-button (click)="cancel()"
+                style="font-family: 'Lato-SemiBold'; font-size: 14px; font-weight: 500;letter-spacing: 0px;border-radius: 8px;
+                 line-height: 32px;text-align: center; background-color:white;color: rgba(0, 0, 0, 1); border:1px solid rgba(0, 0, 0, 1)">
+                &nbsp; &nbsp; Cancel &nbsp; &nbsp;</button>&nbsp; &nbsp;
+            <button mat-raised-button (click)="submit()" class="text-white hover" style="font-family: 'Lato-SemiBold';font-size: 14px; font-weight: 500;letter-spacing: 0px;border-radius: 8px;
+                line-height: 32px; text-align: center;background-color:black;color: #FFFFFF;">
+                &nbsp; &nbsp;Add &nbsp; &nbsp;</button>&nbsp;
+        </div>
+         <div class="d-flex justify-content-center pb-3 mt-3 pt-2" *ngIf="viewtype === 'view'">
+            <button mat-raised-button (click)="cancel()"
+                style="font-family: 'Lato-SemiBold'; font-size: 14px; font-weight: 500;letter-spacing: 0px;border-radius: 8px;
+                 line-height: 32px;text-align: center; background-color:white;color: rgba(0, 0, 0, 1); border:1px solid rgba(0, 0, 0, 1)">
+                &nbsp; &nbsp; Cancel &nbsp; &nbsp;</button>&nbsp;
+           
+        </div>
+
+    </form>
+</div>

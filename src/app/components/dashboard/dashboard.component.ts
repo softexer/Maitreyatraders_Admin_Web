@@ -94,87 +94,9 @@ export class DashboardComponent {
   selectedPeriod: ViewType = 'Year';
   periods: ViewType[] = ['Today', 'Week', 'Month', 'Year'];
 
-  // public lineChartData: ChartConfiguration<'line'>['data'] = {
-  //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  //   datasets: [
-  //     {
-  //       data: [30, 40, 60, 35, 25, 50, 40, 15, 35, 60, 70, 80],
-  //       // label: 'Count',
-  //       fill: true,
-  //       tension: 0.5,
-  //       pointRadius: 4,
-  //       pointBorderColor: 'rgba(255, 105, 180, 1)',
-  //       pointBackgroundColor: 'black',
-  //       borderWidth: 2,
-  //       // borderColor: 'rgba(147,112,219,0.8)',
-  //        borderColor: 'rgba(247, 128, 22, 0.2)',
-  //       backgroundColor: 'rgba(147,112,219,0.3)'
-  //     }
-  //   ]
-  // };
+  startDate: string = "";
+  endDate: string = "";
 
-
-  // public lineChartOptions: ChartOptions<'line'> = {
-  //   responsive: true,
-  //   maintainAspectRatio: true,
-  //   layout: {
-  //     padding: 10
-  //   },
-  //   animation: false,
-  //   plugins: {
-  //     tooltip: {
-  //       backgroundColor: 'rgba(255, 105, 180, 1)',
-  //       titleColor: '#FFFFFF',
-  //       bodyColor: '#FFFFFF',
-  //       displayColors: false,
-  //       padding: 10,
-  //       bodyFont: {
-  //         size: 14,
-  //       },
-  //       titleFont: {
-  //         size: 14,
-  //       },
-  //       callbacks: {
-  //         title: (context) => {
-  //           const label = context[0].label || '';
-  //           return `Month: ${label}`;
-  //         },
-  //         label: (context) => {
-  //           const value = context.parsed.y || 0;
-  //           return `Count: ${value}`;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       display: false,
-  //     }
-  //   },
-  //   scales: {
-  //     y: {
-  //       beginAtZero: true,
-  //       ticks: {
-  //         stepSize: 1,
-  //         callback: (value) => {
-  //           const numericValue = Number(value);
-  //           return numericValue % 1 === 0 ? numericValue : '';
-  //         },
-  //       },
-  //     },
-  //   },
-  //   elements: {
-  //     line: {
-  //       borderWidth: 2,
-  //       tension: 0.4,
-  //       borderColor: 'rgba(6, 21, 43, 1)',
-  //     },
-  //     point: {
-  //       radius: 5,
-  //       backgroundColor: 'black',
-  //       borderWidth: 1,
-  //       hoverRadius: 7,
-  //     },
-  //   },
-  // };
   public lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
@@ -269,68 +191,68 @@ export class DashboardComponent {
     }
     this.generatePageNumbers()
     this.pageInputControl.setValue(this.currentPage.toString());
+    this.view='Year';
+    this.selectPeriod(this.view);
     this.LoadDashboard();
   }
 
-  startDate: string = "";
-  endDate: string = "";
   selectPeriod(period: ViewType) {
     this.selectedPeriod = period;
-    this.view = period;        // ✅ keeps chart in sync
-    // this.LoadDashboard();
-    // this.updateChart();        // ✅ refresh chart
+    this.view = period;        // ✅ keeps chart in sync    
+    const now = new Date();
+    let start: Date;
+    let end: Date;
 
-    
-  const now = new Date();
-  let start: Date;
-  let end: Date;
+    switch (period) {
 
-  switch (period) {
+      case 'Today':
+        start = new Date(now);
+        start.setHours(0, 1, 0, 0);        // 12:01 AM
 
-    case 'Today':
-      start = new Date(now);
-      start.setHours(0, 1, 0, 0);        // 12:01 AM
+        end = new Date(now);
+        end.setHours(23, 59, 59, 999);     // 11:59:59 PM
+        break;
 
-      end = new Date(now);
-      end.setHours(23, 59, 59, 999);     // 11:59:59 PM
-      break;
+      case 'Week':
+        start = new Date(now);
+        start.setDate(now.getDate() - now.getDay()); // Sunday
+        start.setHours(0, 1, 0, 0);
 
-    case 'Week':
-      start = new Date(now);
-      start.setDate(now.getDate() - now.getDay()); // Sunday
-      start.setHours(0, 1, 0, 0);
+        end = new Date(start);
+        end.setDate(start.getDate() + 6); // Saturday
+        end.setHours(23, 59, 59, 999);
+        break;
 
-      end = new Date(start);
-      end.setDate(start.getDate() + 6); // Saturday
-      end.setHours(23, 59, 59, 999);
-      break;
+      case 'Month':
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        start.setHours(0, 1, 0, 0);
 
-    case 'Month':
-      start = new Date(now.getFullYear(), now.getMonth(), 1);
-      start.setHours(0, 1, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        end.setHours(23, 59, 59, 999);
+        break;
 
-      end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      end.setHours(23, 59, 59, 999);
-      break;
+      case 'Year':
+        start = new Date(now.getFullYear(), 0, 1);
+        start.setHours(0, 1, 0, 0);
 
-    case 'Year':
-      start = new Date(now.getFullYear(), 0, 1);
-      start.setHours(0, 1, 0, 0);
+        end = new Date(now.getFullYear(), 11, 31);
+        end.setHours(23, 59, 59, 999);
+        break;
 
-      end = new Date(now.getFullYear(), 11, 31);
-      end.setHours(23, 59, 59, 999);
-      break;
+      default:
+        return;
 
-    default:
-      return;
-  }
 
-  // Convert to TIMESTAMP format (string)
-  this.startDate = start.getTime().toString();
-  this.endDate = end.getTime().toString();
+    }
 
-  console.log('Start:', this.startDate);
-  console.log('End:', this.endDate);
+    // Convert to TIMESTAMP format (string)
+    this.startDate = start.getTime().toString();
+    this.endDate = end.getTime().toString();
+
+    console.log('Start:', this.startDate);
+    console.log('End:', this.endDate);
+    this.LoadDashboard();
+    this.updateChart();        // ✅ refresh chart
   }
 
 
@@ -349,12 +271,10 @@ export class DashboardComponent {
       pageNo: 1,
       size: 10,
       selectTypeGraph: this.view,
-      startDate:this.startDate,
+      startDate: this.startDate,
       endDate: this.endDate
-      // startDate: "1736506168000",
-      // endDate: "1767091768000"
-
     };
+    console.log(payload)
     this.AdminService.showLoader.next(true);
     this.AdminService.GetDashboard(payload).subscribe(
       (res: any) => {
@@ -438,7 +358,7 @@ export class DashboardComponent {
         this.AdminService.showLoader.next(false);
       },
       (err: HttpErrorResponse) => {
-        console.error("Error fetching drivers:", err.message);
+        console.error("Error fetching:", err.message);
         this.openSnackBar(err.message, "");
         this.AdminService.showLoader.next(false);
       }
@@ -639,15 +559,15 @@ export class DashboardComponent {
     // }
 
   }
-formatDatemonth(dateStr: string): string {
-  const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  formatDatemonth(dateStr: string): string {
+    const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  const date = new Date(dateStr); // parse the date string
-  const day = date.getDate();
-  const monthName = monthNamesEn[date.getMonth()]; // get month from date
-  return `${monthName} ${day}`;
-}
+    const date = new Date(dateStr); // parse the date string
+    const day = date.getDate();
+    const monthName = monthNamesEn[date.getMonth()]; // get month from date
+    return `${monthName} ${day}`;
+  }
 
 
   formatDateyear(month: string): string {

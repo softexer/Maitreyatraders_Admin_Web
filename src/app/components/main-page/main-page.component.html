@@ -63,6 +63,18 @@
                             </div>
                         </a>
                     </li>
+
+                    <li routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="openSideNav()">
+                        <a class="nav-link text-decoration-none" [routerLink]="['/admin/promotion']"
+                            routerLinkActive="active" #rlaPromo="routerLinkActive">
+                            <div class="d-flex align-items-center">
+                                <img [src]="rlaPromo.isActive ? '../../../assets/alb_act.png' : '../../../assets/alb_in.png'"
+                                    style="margin-right: 4px;" />
+                                <span>Promotions</span>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

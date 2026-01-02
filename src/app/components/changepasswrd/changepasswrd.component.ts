@@ -41,7 +41,7 @@ export class ChangepasswrdComponent implements OnInit {
   showConfirmPwd = false;
 
   constructor(
-    private adminService: MaitreyaAdminService,
+    private AdminService: MaitreyaAdminService,
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog, public dialogRef: MatDialogRef<HeaderComponent>,
@@ -65,27 +65,44 @@ export class ChangepasswrdComponent implements OnInit {
 
   saveChange() {
     this.submitted = true;
-
-    // Reset mismatch every submit
     this.passwordMismatch = false;
-
-    // Stop if required fields missing
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
       return;
     }
-
-    // 🔴 PASSWORD MATCH CHECK
     if (this.newPassword !== this.confirmPassword) {
       this.passwordMismatch = true;
       return;
     }
-
-    // ✅ All good → call API
     const payload = {
-      currentPassword: this.currentPassword,
-      newPassword: this.newPassword
+      emailID: this.user.adminuniqueID,
+      oldpassword: this.currentPassword,
+      password: this.newPassword
     };
+    console.log(payload)
+    this.AdminService.showLoader.next(true);
+    this.AdminService.ChangePWD(payload).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.response === 3) {
 
-    console.log('Payload:', payload);
+        } else {
+
+          console.error("Unexpected response:", res.message);
+        }
+
+        this.AdminService.showLoader.next(false);
+      },
+      (err: HttpErrorResponse) => {
+        console.error("Error fetching:", err.message);
+        this.openSnackBar(err.message, "");
+        this.AdminService.showLoader.next(false);
+      }
+    );
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+      panelClass: "red-snackbar",
+    });
   }
 }

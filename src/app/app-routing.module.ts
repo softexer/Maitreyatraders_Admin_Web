@@ -7,6 +7,7 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { ProductsComponent } from './components/products/products.component';
 import { AddNewProductComponent } from './components/add-new-product/add-new-product.component';
 import { CategoriesAllComponent } from './components/categories-all/categories-all.component';
+import { PromotionsComponent } from './components/promotions/promotions.component';
 import { SingoutComponent } from './components/singout/singout.component';
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: "products", component: ProductsComponent },
       { path: "products/:id", component: AddNewProductComponent },
       { path: "categories", component: CategoriesAllComponent },
+       { path: "promotion", component: PromotionsComponent },
       { path: "signout", component: SingoutComponent },
 
 

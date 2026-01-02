@@ -37,55 +37,73 @@
                             </div>
                         </div>
 
-                        <span class="sort-icon">
-                            <img src="../../../assets/sort1.png">
+                        <span class="sort-icon" (click)="ChangeSort()">
+                            <img [src]="sortType === 'Ascending' ? '../../../assets/sort1.png' : '../../../assets/sort2.png'"
+                                alt="sort" />
                         </span>
+
                     </div>
                 </div>
-
-                <div class="table-section">
-                    <table class="products-table">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Order Id</th>
-                                <th>Product</th>
-                                <th>Date</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-
                 <div class="table-wrapper">
                     <div class="table-scroll-container">
                         <table class="products-table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Order Id</th>
+                                    <th>Product</th>
+                                    <th>Date</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                <tr *ngFor="let product of Mainproducts; let i = index"
-                                    (click)="DisplayOrderDetails(product)">
+                                <tr *ngFor="let item of Mainproducts; let i = index" (click)="DisplayOrderDetails(item)"
+                                    style="cursor: pointer;">
                                     <td>{{ ((pagination.currentPage - 1) * pagination.pageSize) + i + 1 }}</td>
+
+                                    <td>{{ item.orderId }}</td>
                                     <td>
                                         <div class="product-cell">
-                                            <span class="product-image">{{ product.image }}</span>
-                                            <span>{{ product.name }}</span>
+                                            <span class="product-image">
+
+                                                <img *ngIf="item.productImage" [src]="item.productImage"
+                                                    class="product-img" alt="product" />
+                                            </span>
+                                            <span>{{ item.productName }}</span>
                                         </div>
                                     </td>
-                                    <td>{{ getSubcategoryName(product.subcategoryId) }}</td>
-                                    <td>{{ formatDate(product.createdDate) }}</td>
-                                    <td>{{ product.orderCount }}</td>
                                     <td>
-                                        <div class="action-buttons">
-                                            <button class="edit-btn" title="Edit" (click)="editProduct(product)">
-                                                ✏️
-                                            </button>
-                                            <button class="delete-btn" title="Delete"
-                                                (click)="deleteProduct(product.id)">
-                                                🗑️
-                                            </button>
-                                        </div>
+                                        {{ item.orderTime | date: 'dd.MM.yyyy' }} <br />
+                                        {{ item.orderTime | date: 'HH:mm' }}
                                     </td>
+                                    <td>₹{{ item.price }}</td>
+
+                                    <td>
+                                        <!-- SHIPPED (highest priority) -->
+                                        <span class="status shipped" *ngIf="item.status === 'shipped'"
+                                            style="color: rgba(17, 24, 39, 1)">
+                                            <img src="../../../assets/shippd.png"> Shipped
+                                            <div class="tracking-info">
+                                                <small>
+                                                    Tracking ID: <b>{{ item.trackingdt?.trackingID }}</b>
+                                                </small>
+                                            </div>
+                                        </span>
+
+                                        <!-- DELIVERED -->
+                                        <span class="status delivered" *ngIf="item.status === 'delivered'"
+                                            style="color: rgba(33, 196, 93, 1)">
+                                            <img src="../../../assets/delivrd.png"> Delivered
+                                        </span>
+
+                                        <!-- PENDING -->
+                                        <span class="status pending" *ngIf="item.status === 'pending'"
+                                            style="color: rgba(245, 159, 10, 1)">
+                                            <img src="../../../assets/pending.png"> Pending
+                                        </span>
+                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -96,7 +114,7 @@
                     </div>
                 </div>
 
-                <div class="pagination-section">
+                <div class="pagination-section" style="padding-top: 4px;">
                     <button class="pagination-btn prev-btn" [disabled]="pagination.currentPage === 1"
                         (click)="previousPage()">
                         ← Previous
@@ -141,13 +159,10 @@
                     <div class="breadcrumb">
                         <span>Home</span>
                         <span class="separator">></span>
-                        <span>Order List</span>
+                        <span (click)="backtoorders()" style="cursor: pointer;">Order List</span>
                         <span class="separator">></span>
                         <span class="active">Order Details</span>
                     </div>
-                    <!-- <button class="btn-shipped" (click)="markAsShipped()">
-                        Mark as Shipped
-                    </button> -->
                     <button class="btn-shipped" (click)="handleOrderAction()">
                         {{ orderData.status === 'Pending' ? 'Mark as Shipped' : 'Mark as Delivered' }}
                     </button>
@@ -169,13 +184,8 @@
                 <div class="info-cards">
                     <div class="info-card">
                         <div class="card-header">
-                            <div class="icon-wrapper">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
+                            <img src="../../../assets/custm.png" width="30px">
+
                             <h3>Customer</h3>
                         </div>
                         <div class="card-content">
@@ -185,46 +195,13 @@
                                 Phone: <span class="value">{{ orderData.customer.phone }}</span>
 
                             </p>
-                            <!-- <p class="label">Email: <span class="value">{{ orderData.customer.email }}</span></p>
-                            <p class="label">Phone: <span class="value">{{ orderData.customer.phone }}</span></p> -->
                         </div>
-                        <!-- <button class="btn-card" (click)="viewProfile()">View profile</button> -->
                     </div>
 
-                    <!-- <div class="info-card">
-                        <div class="card-header">
-                            <div class="icon-wrapper">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </div>
-                            <h3>Order Info</h3>
-                        </div>
-                        <div class="card-content">
-                            <p class="label">Shipping: <span class="value">{{ orderData.orderInfo.shipping
-                                    }}</span><br />
-                                Payment Method: <span class="value">{{ orderData.orderInfo.paymentMethod
-                                    }}</span><br />
-                                Status: <span class="value">{{ orderData.orderInfo.status }}</span>
-                            </p>
-                        </div>
-                        <button class="btn-card" (click)="downloadInfo()">Download info</button>
-                    </div> -->
 
                     <div class="info-card">
                         <div class="card-header">
-                            <div class="icon-wrapper">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                            </div>
+                            <img src="../../../assets/delivr.png" width="30px">
                             <h3>Deliver to</h3>
                         </div>
                         <div class="card-content">
@@ -233,21 +210,13 @@
                                 <span class="value">{{ orderData.deliveryAddress.city }}</span><br />
                                 <span class="value">{{ orderData.deliveryAddress.state }}</span>
                             </p>
-
                         </div>
-                        <!-- <button class="btn-card" (click)="viewProfile()">View profile</button> -->
                     </div>
 
 
                     <div class="info-card">
                         <div class="card-header">
-                            <div class="icon-wrapper">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                            </div>
+                            <img src="../../../assets/paymt.png" width="30px">
                             <h3>Payment Info</h3>
                         </div>
                         <div class="card-content">
@@ -256,7 +225,20 @@
                                 Phone: {{ orderData.payment.phone }}
                             </p>
                         </div>
-                        <!-- <button class="btn-card" (click)="viewProfile()">View profile</button> -->
+                    </div>
+                    <div class="info-card" *ngIf="orderData.status === 'Shipped'">
+                        <div class="card-header">
+                            <h3>Shipment info</h3>
+                        </div>
+                        <div class="card-content2">
+                            <p class="payment-detail" style="color:rgba(2, 51, 55, 1)">Courier service Name :
+                                <span style="color:black">{{ orderData.orderInfo.corname }}</span>
+                                <br />
+                                Shipping Date : <span>{{ orderData.orderInfo.shipdt }}</span>
+                                <br />
+                                Tracking ID : <span>{{ orderData.orderInfo.trackid }}</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,53 +254,64 @@
                 </div>
 
                 <div class="products-table">
-                    <div class="table-header">
-                        <div class="col-checkbox"></div>
+                    <div class="table-header" style="  color: #aca5a5;
+    font-family: 'Rubik-SemiBold';
+    font-size: 12px;">
                         <div class="col-product">Product Name</div>
                         <div class="col-order-id">Order ID</div>
                         <div class="col-quantity">Quantity</div>
-                        <div class="col-quantity"></div>
                         <div class="col-total">Total</div>
                     </div>
 
-                    <div class="table-body">
+                    <div class="table-body" style=" color:rgba(0, 0, 0, 1);">
                         <div class="table-row" *ngFor="let product of orderData.products">
-                            <div class="col-checkbox">
-                                <!-- <input type="checkbox" [checked]="product.selected" (change)="toggleProduct(product)" /> -->
-                            </div>
                             <div class="col-product">
-                                <img [src]="product.image" [alt]="product.name" class="product-image" />
+                                <img [src]="product.image" class="product-image" />
                                 <span>{{ product.name }}</span>
                             </div>
                             <div class="col-order-id">{{ product.orderId }}</div>
                             <div class="col-quantity">{{ product.quantity }}</div>
-                            <div class="col-quantity"></div>
                             <div class="col-total">₹{{ product.total.toFixed(2) }}</div>
+                        </div>
+
+                    </div>
+                    <div class="table-summary">
+                        <div class="summary-row">
+                            <div></div>
+                            <div></div>
+                            <div class="summary-label">Subtotal</div>
+                            <div class="summary-value">₹{{ orderData.subtotal.toFixed(2) }}</div>
+                        </div>
+
+                        <div class="summary-row">
+                            <div></div>
+                            <div></div>
+                            <div class="summary-label">Tax ({{ getTaxPercentage() }}%)</div>
+                            <div class="summary-value">₹{{ orderData.tax.toFixed(2) }}</div>
+                        </div>
+
+                        <div class="summary-row">
+                            <div></div>
+                            <div></div>
+                            <div class="summary-label">Discount</div>
+                            <div class="summary-value">₹{{ orderData.discount }}</div>
+                        </div>
+
+                        <div class="summary-row">
+                            <div></div>
+                            <div></div>
+                            <div class="summary-label">Shipping Rate</div>
+                            <div class="summary-value">₹{{ orderData.shippingRate }}</div>
+                        </div>
+
+                        <div class="summary-row total-row">
+                            <div></div>
+                            <div></div>
+                            <div class="summary-label">Total</div>
+                            <div class="summary-value">₹{{ orderData.total.toFixed(2) }}</div>
                         </div>
                     </div>
 
-                    <div class="table-summary">
-                        <div class="summary-row">
-                            <span class="summary-label">Subtotal</span>
-                            <span class="summary-value">₹{{ orderData.subtotal.toFixed(2) }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Tax ({{ getTaxPercentage() }}%)</span>
-                            <span class="summary-value">₹{{ orderData.tax.toFixed(2) }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Discount</span>
-                            <span class="summary-value">₹{{ orderData.discount }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Sipping Rate</span>
-                            <span class="summary-value">₹{{ orderData.shippingRate }}</span>
-                        </div>
-                        <div class="summary-row total-row">
-                            <span class="summary-label">Total</span>
-                            <span class="summary-value">₹{{ orderData.total.toFixed(2) }}</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

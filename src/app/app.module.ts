@@ -44,6 +44,7 @@ import { CategoriesAllComponent } from './components/categories-all/categories-a
 import { CategoryAddComponent } from './components/category-add/category-add.component';
 import { PromotionsComponent } from './components/promotions/promotions.component';
 import { OfferCardComponent } from './components/offer-card/offer-card.component';
+import { SearchPageComponent } from './components/search-page/search-page.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { OfferCardComponent } from './components/offer-card/offer-card.component
     CategoryAddComponent,
     PromotionsComponent,
     OfferCardComponent,
+    SearchPageComponent,
   ],
   imports: [
     BrowserModule,

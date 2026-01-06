@@ -22,12 +22,18 @@
           <label>Product Name</label>
           <input type="text" [(ngModel)]="formData.basicDetails.productName" class="form-input" />
         </div>
+        <div class="error-text" *ngIf="errors.productName">
+          {{ errors.productName }}
+        </div>
 
         <div class="form-group">
           <label>Product Highlights</label>
           <div class="textarea-wrapper">
             <textarea [(ngModel)]="formData.basicDetails.productHighlights" class="form-textarea"></textarea>
           </div>
+        </div>
+        <div class="error-text" *ngIf="errors.productHighlights">
+          {{ errors.productHighlights }}
         </div>
 
         <div class="form-group">
@@ -36,29 +42,45 @@
             <textarea [(ngModel)]="formData.basicDetails.productDescription" class="form-textarea"></textarea>
           </div>
         </div>
+        <div class="error-text" *ngIf="errors.productDescription">
+          {{ errors.productDescription }}
+        </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Category</label>
-            <select [(ngModel)]="formData.basicDetails.category"
-              (change)="onCategoryChange(formData.basicDetails.category)" class="form-select">
-              <option value="">Select Category</option>
-              <option *ngFor="let cat of categories" [value]="cat">
-                {{ cat }}
+            <select class="form-select" [(ngModel)]="formData.basicDetails.category"
+              (ngModelChange)="selectCategory($event)">
+              <option [ngValue]="null">Select Category</option>
+
+              <option *ngFor="let cat of categories" [ngValue]="cat">
+                {{ cat.name }}
               </option>
             </select>
+            <div class="error-text" *ngIf="errors.category">
+              {{ errors.category }}
+            </div>
           </div>
+
 
           <div class="form-group">
             <label>Sub Category</label>
-            <select [(ngModel)]="formData.basicDetails.subCategory" class="form-select"
-              [disabled]="!subCategories.length">
-              <option value="">Select Sub Category</option>
-              <option *ngFor="let subCat of subCategories" [value]="subCat">
-                {{ subCat }}
+            <select class="form-select" [(ngModel)]="formData.basicDetails.subCategory"
+              (ngModelChange)="selectSubcategory($event)" [disabled]="!isSubCategoryEnabled">
+              <option [ngValue]="null" disabled>
+                Select Sub Category
+              </option>
+
+              <option *ngFor="let sub of subcategories" [ngValue]="sub">
+                {{ sub.name }}
               </option>
             </select>
+
+            <div class="error-text" *ngIf="errors.subCategory">
+              {{ errors.subCategory }}
+            </div>
           </div>
+
         </div>
 
         <!-- PRICING -->
@@ -82,8 +104,13 @@
                   {{ curr.flag }}
                 </option>
               </select>
+
+            </div>
+            <div class="error-text" *ngIf="pricingErrors.productPrice">
+              {{ pricingErrors.productPrice }}
             </div>
           </div>
+
 
           <!-- Discounted Price -->
           <div class="pricing-group">
@@ -91,6 +118,9 @@
             <div class="input-box discount">
               <span class="currency">{{ getCurrencySymbol() }}</span>
               <input type="text" [(ngModel)]="formData.pricing.discountedPrice" placeholder="0.00" />
+            </div>
+            <div class="error-text" *ngIf="pricingErrors.discountedPrice">
+              {{ pricingErrors.discountedPrice }}
             </div>
           </div>
 
@@ -104,8 +134,15 @@
                   {{ unit }}
                 </option>
               </select>
+
             </div>
+            <div class="error-text" *ngIf="pricingErrors.weight">
+             {{ pricingErrors.weight }}
+            </div>
+
           </div>
+
+
 
           <!-- Add button -->
           <button class="add-btn" (click)="addPricing()">
@@ -133,6 +170,10 @@
             </tr>
           </tbody>
         </table>
+        <div class="error-text table-error" *ngIf="pricingTableError">
+          {{ pricingTableError }}
+        </div>
+
 
         <div style="padding-top: 15px;padding-bottom: 10px;">
           <label style=" font-size: 13px; font-weight: 500; color: rgba(2, 51, 55, 1) !important;
@@ -151,16 +192,24 @@
           <div class="form-group">
             <label>Start</label>
             <div class="date-input-group">
-              <input type="date" [(ngModel)]="formData.expiration.startDate" class="form-input" />
+              <input type="date" [(ngModel)]="formData.expiration.startDate" class="form-input"
+                (change)="onStartDateChange($event)" />
               <span class="calendar-icon">📅</span>
+            </div>
+            <div class="error-text" *ngIf="errors.startDate">
+              {{ errors.startDate }}
             </div>
           </div>
 
           <div class="form-group">
             <label>End</label>
             <div class="date-input-group">
-              <input type="date" [(ngModel)]="formData.expiration.endDate" class="form-input" />
+              <input type="date" [(ngModel)]="formData.expiration.endDate" class="form-input"
+                (change)="onEndDateChange($event)" />
               <span class="calendar-icon">📅</span>
+            </div>
+            <div class="error-text" *ngIf="errors.endDate">
+              {{ errors.endDate }}
             </div>
           </div>
         </div>
@@ -180,11 +229,18 @@
         <div class="form-row">
           <div class="form-group">
             <label>Stock Quantity</label>
-            <!-- <input type="text" [(ngModel)]="formData.inventory.stockQuantity" class="form-input" /> -->
+            <!-- <input type="text" class="form-input" [(ngModel)]="formData.inventory.stockQuantity"
+              [disabled]="formData.inventory.unlimited"
+              [placeholder]="formData.inventory.unlimited ? 'Unlimited' : 'Enter quantity'" /> -->
             <input type="text" class="form-input" [(ngModel)]="formData.inventory.stockQuantity"
               [disabled]="formData.inventory.unlimited"
               [placeholder]="formData.inventory.unlimited ? 'Unlimited' : 'Enter quantity'" />
+            <div class="error-text" *ngIf="errors.stockQuantity">
+              {{ errors.stockQuantity }}
+            </div>
           </div>
+
+
 
           <div class="form-group">
             <label>Stock Status</label>
@@ -211,21 +267,10 @@
     </div>
 
     <!-- RIGHT SECTION - IMAGE UPLOAD -->
-    <div class="right-section">
+    <!-- <div class="right-section">
       <div class="image-upload-section">
         <h2>Upload Product Image</h2>
-
         <label class="label-text">Product Image</label>
-
-
-
-
-
-
-
-
-
-
         <div class="main-image-container">
           <div class="image-preview">
             <img *ngIf="mainImagePreview" [src]="mainImagePreview" alt="Product Preview" class="preview-image" />
@@ -265,6 +310,48 @@
           </div>
         </div>
       </div>
+    </div> -->
+
+
+
+
+    <div class="right-section">
+      <div class="image-upload-section">
+        <h2>Upload Product Image</h2>
+        <label class="label-text">Product Image</label>
+        <div class="main-image-container">
+          <div class="image-preview">
+            <img *ngIf="mainImagePreview" [src]="mainImagePreview" alt="Product Preview" class="preview-image" />
+            <div *ngIf="!mainImagePreview" class="placeholder-image">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <button *ngIf="mainImagePreview" class="btn-replace overlay-replace" (click)="replaceInput.click()">
+              Replace
+            </button>
+            <input #replaceInput type="file" accept="image/*" hidden (change)="onReplaceImage($event)" />
+          </div>
+        </div>
+
+        <div class="thumbnails-section">
+          <div class="thumbnails-container">
+            <div *ngFor="let thumbnail of thumbnailPreviews; let i = index" class="thumbnail"
+              (click)="selectThumbnail(i)">
+              <img [src]="thumbnail" [alt]="'Thumbnail ' + (i + 1)">
+              <button class="btn-remove-thumb" (click)="removeThumbnail(i); $event.stopPropagation()">×</button>
+            </div>
+            <label class="add-image-box">
+              <span class="plus-icon">+</span>
+              <span class="add-text">Add image</span>
+              <input type="file" accept="image/*" multiple hidden (change)="onThumbnailSelected($event)" />
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

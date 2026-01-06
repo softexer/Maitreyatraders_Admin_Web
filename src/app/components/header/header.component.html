@@ -19,42 +19,44 @@
     <div class="header-right">
 
         <!-- SEARCH -->
-        <!-- <div class="search-wrapper">
-            <img src="../../../assets/Search.png" class="icon" (click)="toggleSearch(); $event.stopPropagation()" />
-
-            <div class="search-dropdown" *ngIf="showSearch">
-                <div class="search-input">
-                    <input type="text" placeholder="MOCK CHICKEN" />
-                    <span class="close" (click)="showSearch = false">✕</span>
-                </div>
-
-                <div class="search-results">
-                    <div class="result-item">Lorem Ipsum</div>
-                    <div class="result-item">Lorem Ipsum 02</div>
-                    <div class="result-item">Lorem Ipsum</div>
-                    <div class="see-all">See all products</div>
-                </div>
-            </div>
-        </div> -->
-
-
-        <div class="search-wrapper">
-
-            <!-- SEARCH ICON -->
-            <img *ngIf="!showSearch" src="../../../assets/Search.png" class="icon" (click)="toggleSearch()" />
-
-            <!-- INLINE SEARCH (NOT DESTROYED) -->
-            <div class="search-inline" [class.show]="showSearch">
+        <div class="search-wrapper" (click)="$event.stopPropagation()">
+            <img src="../../../assets/Search.png" class="icon search-trigger" [class.hide]="showSearch"
+                (click)="toggleSearch(); $event.stopPropagation()" />
+            <div class="search-inline" [class.show]="showSearch" (click)="$event.stopPropagation()">
                 <img src="../../../assets/Search.png" class="icon small" />
+                <input type="text" [(ngModel)]="searchText" placeholder="Search products"
+                    (keydown.enter)="GotoSearch(); $event.preventDefault(); $event.stopPropagation()"
+                    (click)="$event.stopPropagation()" />
 
-                <input type="text" [(ngModel)]="searchText" name="searchText" placeholder="Search products" />
 
-                <img src="../../../assets/cancel.png" class="icon small close-icon" (click)="closeSearch()" />
+                <img src="../../../assets/cancel.png" class="icon small close-icon"
+                    (click)="closeSearch(); $event.stopPropagation()" width="10" />
             </div>
+            <div class="search-dropdown" *ngIf="displaylist">
+                <div *ngIf="AllSearchItems.length > 0">
+                    <div class="panel-header">
+                        <span>Products</span>
+                        <div></div>
+                    </div>
+                    <div class="search-results" *ngFor="let n of AllSearchItems">
+                        <div class="image-wrap">
+                            <img *ngIf="n.productImagesList?.length" [src]="baseUrl + n.productImagesList[0]"
+                                alt="product" (click)="ProductView(n)" />
+                        </div>
+                        <div class="title" (click)="ProductView(n)">{{ n.productName }}</div>
+                    </div>
+                    <div class="see-all" (click)="gotoAllProducts()">
+                        See all products
+                    </div>
+                </div>
+                <div *ngIf="AllSearchItems.length === 0">
+                    <div class="search-results">
+                        <div class="title">No results</div>
+                    </div>
+                </div>
 
+            </div>
         </div>
-
-
         <!-- NOTIFICATIONS -->
         <div class="icon-wrapper">
             <img src="../../../assets/notifications.png" class="icon"

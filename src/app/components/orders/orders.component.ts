@@ -190,8 +190,7 @@ export class OrdersComponent implements OnInit {
 
   activeTab: string = 'All';
   tabs: string[] = [
-    'All', 'Pending', 'Delivered'
-  ];
+    'All', 'New', 'Shipped', 'Delivered',];
   products: Product[] = [
     {
       id: '1',
@@ -380,20 +379,25 @@ export class OrdersComponent implements OnInit {
             const products = order.Products || [];
             const firstProduct = products[0] || {};
             const tracking = order.orderTrackingDetails;
-
+            let displayStatus: 'New' | 'Shipped' | 'Delivered' = 'New';
             // ✅ DECLARE FIRST
             const hasTracking =
               tracking &&
               tracking.trackingID &&
               tracking.trackingID.trim() !== '';
 
-            let displayStatus = 'pending';
 
-            if (hasTracking) {
-              displayStatus = 'shipped';
-            } else if (order.orderStatus === 'Completed') {
-              displayStatus = 'delivered';
+            // ✅ Delivered has TOP priority
+            if (order.orderStatus === 'Completed') {
+              displayStatus = 'Delivered';
             }
+            else if (hasTracking) {
+              displayStatus = 'Shipped';
+            }
+            else {
+              displayStatus = 'New';
+            }
+
 
             const totalProductPrice = products.reduce(
               (sum: number, p: any) => sum + p.price * p.quantity,
@@ -429,8 +433,7 @@ export class OrdersComponent implements OnInit {
           this.pagination.totalPages = res.totalpages;
 
           // Optional (if backend doesn't send total count)
-          this.pagination.totalItems =
-            res.totalpages * this.pagination.pageSize;
+          this.pagination.totalItems = res.totalpages * this.pagination.pageSize;
 
 
         } else {
@@ -496,6 +499,7 @@ export class OrdersComponent implements OnInit {
 
   backtoorders() {
     this.IsDetailPage = false;
+    this.GatAllOrders();
   }
   editProduct(product: any): void {
     console.log('Edit product:', product);
@@ -622,11 +626,35 @@ export class OrdersComponent implements OnInit {
   }
 
   handleOrderAction() {
+    console.log(this.orderData.status)
     if (this.orderData.status === 'Pending') {
       this.markAsShipped();
-    } else if (this.orderData.status === 'Delivered') {
-      // this.goToDelivered();
+    } else if (this.orderData.status === 'Shipped') {
+      this.goToDelivered();
     }
+  }
+  goToDelivered() {
+    let payload = {
+      adminuniqueID: this.user.adminuniqueID,
+      orderId: this.selectedOrderId
+    }
+    this.AdminService.SendtoDelivery(payload).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.response === 3) {
+
+          this.backtoorders();
+        } else {
+          console.error("Unexpected response:", res.message);
+        }
+        this.AdminService.showLoader.next(false);
+      },
+      (err: HttpErrorResponse) => {
+        console.error("Error fetching:", err.message);
+        this.openSnackBar(err.message, "");
+        this.AdminService.showLoader.next(false);
+      }
+    );
   }
   markAsShipped() {
     let dialogRef = this.dialog.open(ShippingInfoComponent, {

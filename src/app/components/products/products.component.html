@@ -9,11 +9,17 @@
 
             <div class="category-section">
                 <div class="category-list">
-                    <button *ngFor="let category of categories" [class.active]="isCategoryActive(category)"
+                    <!-- <button *ngFor="let category of categories" [class.active]="isCategoryActive(category)"
                         class="category-btn" (click)="selectCategory(category)">
                         <span class="category-icon">{{ category.image }}</span>
                         <span class="category-name">{{ category.name }}</span>
+                    </button> -->
+
+                    <button *ngFor="let category of categories" class="category-btn"
+                        [class.active]="selectedCategory?.id === category.id" (click)="selectCategory(category)">
+                        <span class="category-name">{{ category.name }}</span>
                     </button>
+
                 </div>
 
                 <button class="add-product-btn" (click)="openAddProductModal()">
@@ -26,10 +32,16 @@
 
             <div class="subcategory-section">
                 <div class="subcategory-tabs">
-                    <button *ngFor="let subcategory of subcategories" [class.active]="isSubcategoryActive(subcategory)"
+                    <!-- <button *ngFor="let subcategory of subcategories" [class.active]="isSubcategoryActive(subcategory)"
                         class="subcategory-tab" (click)="selectSubcategory(subcategory)">
                         {{ subcategory.name }}
+                    </button> -->
+                    <button *ngFor="let subcategory of subcategories" class="subcategory-tab"
+                        [class.active]="selectedSubcategory?.id === subcategory.id"
+                        (click)="selectSubcategory(subcategory)">
+                        {{ subcategory.name }}
                     </button>
+
                 </div>
 
                 <div class="search-section">
@@ -38,57 +50,59 @@
                     <div class="search-icon">🔍</div>
                 </div>
 
-                <div class="table-section">
-                    <table class="products-table">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Product</th>
-                                <th>Sub Category</th>
-                                <th>Created Date</th>
-                                <th>Order</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-
                 <div class="table-wrapper">
                     <div class="table-scroll-container">
-                        <div class="table-section">
                             <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Product</th>
+                                        <th>Sub Category</th>
+                                        <th>Created Date</th>
+                                        <th>Order</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr *ngFor="let product of products; let i = index">
-                                        <td>{{ ((pagination.currentPage - 1) * pagination.pageSize) + i + 1 }}</td>
+                                        <td>{{ ((pagination.currentPage || 1) - 1) * (pagination.pageSize || 10) + i + 1 }}</td>
+
                                         <td>
                                             <div class="product-cell">
-                                                <span class="product-image">{{ product.image }}</span>
-                                                <span>{{ product.name }}</span>
+                                                <img class="product-image" alt="product"
+                                                    [src]="product.productImagesList?.[0] ? baseUrl + product.productImagesList[0] : 'assets/no-image.png'" />
+
+                                                <span>{{ product.productName }}</span>
                                             </div>
                                         </td>
-                                        <td>{{ getSubcategoryName(product.subcategoryId) }}</td>
-                                        <td>{{ formatDate(product.createdDate) }}</td>
-                                        <td>{{ product.orderCount }}</td>
+
+                                        <td>{{ product.subCategoryName }}</td>
+
                                         <td>
-                                            <div class="action-buttons">
-                                                <button class="edit-btn" title="Edit" (click)="editProduct(product)">
-                                                    ✏️
-                                                </button>
-                                                <button class="delete-btn" title="Delete"
-                                                    (click)="deleteProduct(product.id)">
-                                                    🗑️
-                                                </button>
+                                             {{ product.timestamp ? formatDate23(product.timestamp) : '-' }}
+                                        </td>
+
+                                        <td>{{ product.stockQuantity }}</td>
+
+                                        <td>
+                                           
+                                            <div class="actions ms-auto">
+                                                <img src="../../../assets/editimg.png" (click)="editProduct(product)"
+                                                    class="action-icon">
+                                                <img src="../../../assets/deleteimg.png" (click)="deleteProduct(product.productID)"
+                                                    class="action-icon">
+
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
+
                             </table>
 
                             <div *ngIf="products.length === 0" class="no-products">
                                 <p>No products found</p>
                             </div>
-                        </div>
+                        <!-- </div> -->
                     </div>
                 </div>
 

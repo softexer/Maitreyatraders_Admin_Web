@@ -52,6 +52,15 @@ export class ChangepasswrdComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let usr = localStorage.getItem('MAdmin');
+    if (usr) {
+      this.user = JSON.parse(usr);
+      console.log(this.user)
+      this.isLoggedIn = true;
+    } else {
+      this.isLoggedIn = false;
+      this.router.navigateByUrl('/login');
+    }
   }
 
   toggleCurrentPwd() {
@@ -64,6 +73,7 @@ export class ChangepasswrdComponent implements OnInit {
   }
 
   saveChange() {
+    console.log(this.user.emailID)
     this.submitted = true;
     this.passwordMismatch = false;
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
@@ -74,7 +84,8 @@ export class ChangepasswrdComponent implements OnInit {
       return;
     }
     const payload = {
-      emailID: this.user.adminuniqueID,
+      // emailID: this.user.emailID,
+      adminuniqueID: this.user.adminuniqueID,
       oldpassword: this.currentPassword,
       password: this.newPassword
     };
@@ -84,16 +95,18 @@ export class ChangepasswrdComponent implements OnInit {
       (res: any) => {
         console.log(res);
         if (res.response === 3) {
+          this.openSnackBar(res.message, "");
+          this.dialogRef.close(true)
 
         } else {
+          this.openSnackBar(res.message, "");
 
-          console.error("Unexpected response:", res.message);
         }
 
         this.AdminService.showLoader.next(false);
       },
       (err: HttpErrorResponse) => {
-        console.error("Error fetching:", err.message);
+        console.error("Error fetching:", err);
         this.openSnackBar(err.message, "");
         this.AdminService.showLoader.next(false);
       }

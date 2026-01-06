@@ -355,7 +355,7 @@
 }
 
 .products-table thead {
-    background: #EFEFEF;
+    /* background: #EFEFEF; */
     /* border-bottom: 1px solid #EFEFEF; */
     border-radius: 12px;
     color: rgba(47, 85, 88, 1);
@@ -363,7 +363,7 @@
 .products-table thead th {
   position: sticky;
   top: 0;
-  background: #EFEFEF;
+   background: #CCCCCC;
   z-index: 2;
   
 }
@@ -379,6 +379,7 @@
     font-size: 13px;
     line-height: 100%;
     letter-spacing: 1%;
+     background: #CCCCCC;
 }
 
 .products-table td {

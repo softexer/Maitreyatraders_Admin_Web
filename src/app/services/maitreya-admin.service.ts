@@ -48,6 +48,13 @@ export class MaitreyaAdminService {
     );
   }
 
+  //search
+  SearchinHdr(data: any): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/api/admin/productsearch?adminuniqueID=${data.adminuniqueID}&searchText=${data.searchText}`
+    );
+  }
+
   //Dashboard
   GetDashboard(data: any): Observable<any> {
     return this.http.post(
@@ -76,11 +83,47 @@ export class MaitreyaAdminService {
     );
   }
 
-
-   //CategoryFetch
+  //ord-delivrd
+  SendtoDelivery(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/admin/orderdelivered`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+  //CategoryFetch
   GetAllCats(data: any): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/api/categories/fetchcategorys`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+  //Fetchproducts
+  ProductsFetch(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/product/fetchproduct`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+
+  //Add-Product
+  InsertNewProduct(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/product/addproduct`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+  //Categoy-module
+  //cat insert
+  AddCategory(data: any): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/api/categories/categoryinsert`,
       data
       // { headers: { maitreya: token } }
     );

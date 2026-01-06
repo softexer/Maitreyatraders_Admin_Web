@@ -13,13 +13,9 @@
 
         <!-- CATEGORY TABS -->
         <div class="category-tabs">
-            <button class="tab-btn" [class.active]="selectedCategory === 'Indian'" (click)="selectCategory('Indian')">
-                Indian Delights
-            </button>
-
-            <button class="tab-btn" [class.active]="selectedCategory === 'Malaysian'"
-                (click)="selectCategory('Malaysian')">
-                Malaysian Delights
+            <button *ngFor="let category of categories" class="tab-btn"
+                [class.active]="selectedCategory?.id === category.id" (click)="selectCategory(category)">
+                <span class="category-name">{{ category.name }}</span>
             </button>
         </div>
 
@@ -48,25 +44,26 @@
             <div class="table-wrapper">
                 <div class="table-scroll-container">
                     <div class="row gx-3">
-
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-3"
-                            *ngFor="let sub of subcategories[selectedCategory]; let i = index">
+                            *ngFor="let sub of subcategories; let i = index">
+
                             <div class="subcategory-item d-flex align-items-center">
-                                <span class="subcategory-text" title="{{ sub }}">
-                                    {{ sub }}
+                                <span class="subcategory-text" title="{{ sub.name }}">
+                                    {{ sub.name }}
                                 </span>
+
                                 <div class="actions ms-auto">
-                                    <img src="../../../assets/editimg.png" (click)="editSubcategory(i)"
-                                        class="action-icon">
-                                    <img src="../../../assets/deleteimg.png" (click)="deleteSubcategory(i)"
+                                    <img src="../../../assets/editimg.png" (click)="editSubcategory(sub)"
                                         class="action-icon">
 
+                                    <img src="../../../assets/deleteimg.png" (click)="deleteSubcategory(sub)"
+                                        class="action-icon">
                                 </div>
-
                             </div>
 
-
                         </div>
+
+
 
                     </div>
                 </div>

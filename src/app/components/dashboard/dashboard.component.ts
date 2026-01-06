@@ -191,7 +191,7 @@ export class DashboardComponent {
     }
     this.generatePageNumbers()
     this.pageInputControl.setValue(this.currentPage.toString());
-    this.view='Year';
+    this.view = 'Year';
     this.selectPeriod(this.view);
     this.LoadDashboard();
   }
@@ -207,7 +207,7 @@ export class DashboardComponent {
 
       case 'Today':
         start = new Date(now);
-        start.setHours(0, 1, 0, 0);        // 12:01 AM
+        start.setHours(5, 30, 0, 0);        // 12:01 AM
 
         end = new Date(now);
         end.setHours(23, 59, 59, 999);     // 11:59:59 PM
@@ -216,7 +216,7 @@ export class DashboardComponent {
       case 'Week':
         start = new Date(now);
         start.setDate(now.getDate() - now.getDay()); // Sunday
-        start.setHours(0, 1, 0, 0);
+        start.setHours(5, 30, 0, 0);
 
         end = new Date(start);
         end.setDate(start.getDate() + 6); // Saturday
@@ -225,7 +225,7 @@ export class DashboardComponent {
 
       case 'Month':
         start = new Date(now.getFullYear(), now.getMonth(), 1);
-        start.setHours(0, 1, 0, 0);
+        start.setHours(5, 30, 0, 0);
 
         end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
         end.setHours(23, 59, 59, 999);
@@ -233,7 +233,7 @@ export class DashboardComponent {
 
       case 'Year':
         start = new Date(now.getFullYear(), 0, 1);
-        start.setHours(0, 1, 0, 0);
+        start.setHours(5, 30, 0, 0);
 
         end = new Date(now.getFullYear(), 11, 31);
         end.setHours(23, 59, 59, 999);
@@ -374,50 +374,126 @@ export class DashboardComponent {
   }
 
   updateChart() {
+      /* ---------------- WEEK / TODAY ---------------- */
+  if (this.view === 'Week' || this.view === 'Today') {
+ const analyticData = this.Dashboard_grapph;
+    this.lineChartData = {
+      labels: analyticData.map((item: any) =>
+        this.formatDateWeek(item.date)   // dd-MM-yyyy
+      ),
+      datasets: [
+          {
+            data: analyticData.map((item: any) => item.count),
+            label: 'Count',
+
+            fill: false,           // ✅ NO background fill
+            tension: 0.45,         // smooth curve
+            pointRadius: 0,        // hide points
+            pointHoverRadius: 6,
+
+            borderWidth: 3,
+            borderColor: (context) => {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return;
+
+              const gradient = ctx.createLinearGradient(
+                chartArea.left,
+                0,
+                chartArea.right,
+                0
+              );
+
+              gradient.addColorStop(0, 'rgba(247, 128, 22, 0.35)');
+              gradient.addColorStop(1, 'rgba(254, 179, 41, 0.99)');
+
+              return gradient;
+            },
+          },
+        ],
+    };
+  }
 
     /* ---------------- WEEK (keep as-is) ---------------- */
     if (this.view === 'Week') {
       const analyticData = this.Dashboard_grapph;
 
       this.lineChartData = {
-        labels: analyticData.map((item: any) => item.day),
+        labels: analyticData.map((item: any) =>
+          this.formatDateWeek(item.date)   // ✅ dd-MM-yyyy
+        ),
         datasets: [
           {
             data: analyticData.map((item: any) => item.count),
             label: 'Count',
-            fill: true,
-            tension: 0.5,
-            pointRadius: 4,
-            borderWidth: 2,
-            borderColor: 'rgba(147,112,219,0.8)',
-            backgroundColor: 'rgba(147,112,219,0.3)',
-            pointBorderColor: 'rgba(255, 105, 180, 1)',
-            pointBackgroundColor: 'black',
+
+            fill: false,           // ✅ NO background fill
+            tension: 0.45,         // smooth curve
+            pointRadius: 0,        // hide points
+            pointHoverRadius: 6,
+
+            borderWidth: 3,
+            borderColor: (context) => {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return;
+
+              const gradient = ctx.createLinearGradient(
+                chartArea.left,
+                0,
+                chartArea.right,
+                0
+              );
+
+              gradient.addColorStop(0, 'rgba(247, 128, 22, 0.35)');
+              gradient.addColorStop(1, 'rgba(254, 179, 41, 0.99)');
+
+              return gradient;
+            },
           },
-        ]
+        ],
       };
     }
+
 
     /* ---------------- MONTH (keep as-is) ---------------- */
     if (this.view === 'Month') {
       const analyticData = this.Dashboard_grapph;
 
       this.lineChartData = {
-        labels: analyticData.map((item: any) => this.formatDatemonth(item.day)),
+        labels: analyticData.map((item: any) =>
+          this.formatDatemonth(item.date)   // ✅ FIX HERE
+        ),
         datasets: [
           {
             data: analyticData.map((item: any) => item.count),
             label: 'Count',
-            fill: true,
-            tension: 0.5,
-            pointRadius: 4,
-            borderWidth: 2,
-            borderColor: 'rgba(147,112,219,0.8)',
-            backgroundColor: 'rgba(147,112,219,0.3)',
-            pointBorderColor: 'rgba(255, 105, 180, 1)',
-            pointBackgroundColor: 'black',
+
+            fill: false,           // ✅ NO background fill
+            tension: 0.45,         // smooth curve
+            pointRadius: 0,        // hide points
+            pointHoverRadius: 6,
+
+            borderWidth: 3,
+            borderColor: (context) => {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return;
+
+              const gradient = ctx.createLinearGradient(
+                chartArea.left,
+                0,
+                chartArea.right,
+                0
+              );
+
+              gradient.addColorStop(0, 'rgba(247, 128, 22, 0.35)');
+              gradient.addColorStop(1, 'rgba(254, 179, 41, 0.99)');
+
+              return gradient;
+            },
           },
-        ]
+        ],
       };
     }
 
@@ -462,113 +538,129 @@ export class DashboardComponent {
       };
     }
   }
+  formatDateWeek(dateStr: string): string {
+    const date = new Date(dateStr);
 
-  updateChart2() {
-    if (this.view === 'Week') {
-      let analyticData = this.Dashboard_grapph;
-      console.log(analyticData)
-      this.lineChartLabels = [];
-      this.lineChartData = {
-        labels: analyticData.map((item: any) => item.day),
-        datasets: [
-          {
-            data: analyticData.map((item: any) => item.count),
-            label: 'Count',
-            fill: true,
-            tension: 0.5,
-            pointRadius: 4,
-            borderWidth: 2,
-            borderColor: 'rgba(147,112,219,0.8)',
-            backgroundColor: 'rgba(147,112,219,0.3)',
-            pointBorderColor: 'rgba(255, 105, 180, 1)',
-            pointBackgroundColor: 'black',
-          },
-        ]
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
 
-      };
-    }
-    if (this.view === 'Month') {
-      let analyticData = this.Dashboard_grapph;
-      console.log(analyticData)
-      this.lineChartLabels = [];
-      this.lineChartData = {
-        labels: analyticData.map((item: any) => this.formatDatemonth(item.date)), // use item.date
-        datasets: [
-          {
-            data: analyticData.map((item: any) => item.count),
-            label: 'Count',
-            fill: true,
-            tension: 0.5,
-            pointRadius: 4,
-            borderWidth: 2,
-            borderColor: 'rgba(147,112,219,0.8)',
-            backgroundColor: 'rgba(147,112,219,0.3)',
-            pointBorderColor: 'rgba(255, 105, 180, 1)',
-            pointBackgroundColor: 'black',
-          },
-        ]
-      };
-
-    }
-    if (this.view === 'Year') {
-      const analyticData = this.Dashboard_grapph;
-
-      this.lineChartData = {
-        labels: analyticData.map((item: any) =>
-          this.formatDateyear(item.month)
-        ),
-        datasets: [
-          {
-            data: analyticData.map((item: any) => item.count), // ✅ FIX
-            label: 'Count',
-            fill: true,
-            tension: 0.5,
-            pointRadius: 4,
-            borderWidth: 2,
-            borderColor: 'rgba(147,112,219,0.8)',
-            backgroundColor: 'rgba(147,112,219,0.3)',
-            pointBorderColor: 'rgba(255, 105, 180, 1)',
-            pointBackgroundColor: 'black',
-          },
-        ],
-      };
-    }
-
-    // if (this.view === 'Year') {
-    //   let analyticData = this.Dashboard_grapph;
-    //   console.log(analyticData)
-    //   this.lineChartLabels = [];
-    //   this.lineChartData = {
-    //     labels: analyticData.map((item: any) => this.formatDateyear(item.month)),
-    //     datasets: [
-    //       {
-    //         data: analyticData.map((item: any) => item.totalCompletedCount),
-    //         label: 'Count',
-    //         fill: true,
-    //         tension: 0.5,
-    //         pointRadius: 4,
-    //         borderWidth: 2,
-    //         borderColor: 'rgba(147,112,219,0.8)',
-    //         backgroundColor: 'rgba(147,112,219,0.3)',
-    //         pointBorderColor: 'rgba(255, 105, 180, 1)',
-    //         pointBackgroundColor: 'black',
-    //       },
-    //     ]
-
-    //   };
-    // }
-
+    return `${day}-${month}-${year}`;
   }
+
+  // updateChart2() {
+  //   if (this.view === 'Week') {
+  //     let analyticData = this.Dashboard_grapph;
+  //     console.log(analyticData)
+  //     this.lineChartLabels = [];
+  //     this.lineChartData = {
+  //       labels: analyticData.map((item: any) => item.day),
+  //       datasets: [
+  //         {
+  //           data: analyticData.map((item: any) => item.count),
+  //           label: 'Count',
+  //           fill: true,
+  //           tension: 0.5,
+  //           pointRadius: 4,
+  //           borderWidth: 2,
+  //           borderColor: 'rgba(147,112,219,0.8)',
+  //           backgroundColor: 'rgba(147,112,219,0.3)',
+  //           pointBorderColor: 'rgba(255, 105, 180, 1)',
+  //           pointBackgroundColor: 'black',
+  //         },
+  //       ]
+
+  //     };
+  //   }
+  //   if (this.view === 'Month') {
+  //     let analyticData = this.Dashboard_grapph;
+  //     console.log(analyticData)
+  //     this.lineChartLabels = [];
+  //     this.lineChartData = {
+  //       labels: analyticData.map((item: any) => this.formatDatemonth(item.date)), // use item.date
+  //       datasets: [
+  //         {
+  //           data: analyticData.map((item: any) => item.count),
+  //           label: 'Count',
+  //           fill: true,
+  //           tension: 0.5,
+  //           pointRadius: 4,
+  //           borderWidth: 2,
+  //           borderColor: 'rgba(147,112,219,0.8)',
+  //           backgroundColor: 'rgba(147,112,219,0.3)',
+  //           pointBorderColor: 'rgba(255, 105, 180, 1)',
+  //           pointBackgroundColor: 'black',
+  //         },
+  //       ]
+  //     };
+
+  //   }
+  //   if (this.view === 'Year') {
+  //     const analyticData = this.Dashboard_grapph;
+
+  //     this.lineChartData = {
+  //       labels: analyticData.map((item: any) =>
+  //         this.formatDateyear(item.month)
+  //       ),
+  //       datasets: [
+  //         {
+  //           data: analyticData.map((item: any) => item.count), // ✅ FIX
+  //           label: 'Count',
+  //           fill: true,
+  //           tension: 0.5,
+  //           pointRadius: 4,
+  //           borderWidth: 2,
+  //           borderColor: 'rgba(147,112,219,0.8)',
+  //           backgroundColor: 'rgba(147,112,219,0.3)',
+  //           pointBorderColor: 'rgba(255, 105, 180, 1)',
+  //           pointBackgroundColor: 'black',
+  //         },
+  //       ],
+  //     };
+  //   }
+
+  //   // if (this.view === 'Year') {
+  //   //   let analyticData = this.Dashboard_grapph;
+  //   //   console.log(analyticData)
+  //   //   this.lineChartLabels = [];
+  //   //   this.lineChartData = {
+  //   //     labels: analyticData.map((item: any) => this.formatDateyear(item.month)),
+  //   //     datasets: [
+  //   //       {
+  //   //         data: analyticData.map((item: any) => item.totalCompletedCount),
+  //   //         label: 'Count',
+  //   //         fill: true,
+  //   //         tension: 0.5,
+  //   //         pointRadius: 4,
+  //   //         borderWidth: 2,
+  //   //         borderColor: 'rgba(147,112,219,0.8)',
+  //   //         backgroundColor: 'rgba(147,112,219,0.3)',
+  //   //         pointBorderColor: 'rgba(255, 105, 180, 1)',
+  //   //         pointBackgroundColor: 'black',
+  //   //       },
+  //   //     ]
+
+  //   //   };
+  //   // }
+
+  // }
+  // formatDatemonth(dateStr: string): string {
+  //   const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  //     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  //   const date = new Date(dateStr); // parse the date string
+  //   const day = date.getDate();
+  //   const monthName = monthNamesEn[date.getMonth()]; // get month from date
+  //   return `${monthName} ${day}`;
+  // }
+
   formatDatemonth(dateStr: string): string {
-    const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const date = new Date(dateStr); // parse the date string
-    const day = date.getDate();
-    const monthName = monthNamesEn[date.getMonth()]; // get month from date
-    return `${monthName} ${day}`;
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit'
+    });
   }
-
 
   formatDateyear(month: string): string {
     // English month names

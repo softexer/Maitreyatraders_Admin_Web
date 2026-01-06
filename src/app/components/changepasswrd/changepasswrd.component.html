@@ -35,7 +35,7 @@
 
         <div class="password-wrapper">
             <input [type]="showNewPwd ? 'text' : 'password'" [(ngModel)]="newPassword" name="newPassword"
-                #newPwd="ngModel" required minlength="6" placeholder="Enter new password" />
+                #newPwd="ngModel" required minlength="6" placeholder="Enter new password"  maxlength="10"/>
 
             <span class="eye-icon" (click)="showNewPwd = !showNewPwd" [class.error-eye]="submitted && newPwd.invalid">
 
@@ -62,7 +62,7 @@
                 #confirmPwd="ngModel" required placeholder="Re-enter new password" /> -->
 
             <input [type]="showConfirmPwd ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword"
-                #confirmPwd="ngModel" required placeholder="Re-enter new password" maxlength="6"
+                #confirmPwd="ngModel" required placeholder="Re-enter new password" maxlength="10"
                 (ngModelChange)="checkPasswordMatch()" />
 
 

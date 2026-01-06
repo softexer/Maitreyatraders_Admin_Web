@@ -42,6 +42,22 @@
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 24px;
+
+   max-height: calc(100vh - 160px); /* adjust based on header height */
+  overflow-y: auto;
+  padding-right: 6px; /* prevents scrollbar overlap */
+}
+.form-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.form-wrapper::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .form-section {
@@ -139,7 +155,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 44px;
+  /* height: 44px; */
+   height: 35px;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -163,8 +180,8 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
-  line-height: 44px;
+  font-size: 13px;
+  /* line-height: 44px; */
   /* KEY FIX */
   padding-left: 24px;
 }
@@ -179,11 +196,11 @@
   /* KEY FIX */
   height: 100%;
   /* KEY FIX */
-  line-height: 44px;
+  /* line-height: 44px; */
   /* KEY FIX */
   border: none;
   background: transparent;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   outline: none;
   padding: 0 8px;
@@ -199,9 +216,9 @@
 
 .currency-select,
 .weight-select {
-  padding: 10px 8px;
+  padding: 8px 6px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 13px;
   background-color: white;
   cursor: pointer;
@@ -246,13 +263,13 @@
 .pricing-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 14px;
+  gap: 8px;
   align-items: end;
 }
 
 .pricing-group label {
   display: block;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: rgba(2, 51, 55, 1) !important;
   margin-bottom: 3px;
@@ -283,14 +300,15 @@
   display: flex;
   align-items: center;
   /* already correct */
-  height: 44px;
+  /* height:44px; */
+  height: 35px;
   /* force same height */
   background: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 0 10px;
+  border-radius: 8px;
+  padding: 0 8px;
   /* remove vertical padding */
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Input */
@@ -301,8 +319,8 @@
   width: 100%;
   height: 100%;
   /* match container */
-  font-size: 14px;
-  line-height: 44px;
+  font-size: 13px;
+  /* line-height: 44px; */
   /* KEY FIX */
 }
 
@@ -314,7 +332,7 @@
   font-size: 14px;
   height: 100%;
   /* match container */
-  line-height: 44px;
+  /* line-height: 44px; */
   /* KEY FIX */
   display: flex;
   align-items: center;
@@ -325,14 +343,14 @@
 .currency {
   background: #ecfdf5;
   color: #065f46;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 3px 5px;
+  border-radius: 4px;
   font-weight: 600;
 }
 
 .add-btn {
-  width: 38px;
-  height: 38px;
+  width: 35px;
+  height: 35px;
   /* border-radius: 50%;
   border: 1px solid #e5e7eb;*/
   border: none;
@@ -518,12 +536,12 @@ display: block;
 }
 
 .main-image-container {
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .image-preview {
   width: 100%;
-  height: 280px;
+  height: 180px;
   background-color: #f5f5f5;
   border-radius: 8px;
   display: flex;
@@ -531,6 +549,27 @@ display: block;
   justify-content: center;
   margin-bottom: 12px;
   overflow: hidden;
+}
+.image-preview {
+  position: relative;
+}
+
+.overlay-replace {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  /* background: rgba(0, 0, 0, 0.75); */
+  color: black;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.overlay-replace:hover {
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .preview-image {
@@ -577,7 +616,7 @@ display: block;
 
 .thumbnails-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
@@ -691,4 +730,9 @@ display: block;
   .thumbnails-container {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+.error-text {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 4px;
 }

@@ -69,7 +69,7 @@ export class AddNewProductComponent {
       startDate: '',
       endDate: '',
       start_eph: '',
-      end_eph:''
+      end_eph: ''
     },
 
     inventory: {
@@ -85,7 +85,7 @@ export class AddNewProductComponent {
   thumbnailPreviews: string[] = [];
 
   mainImageFile: File | null = null;
-thumbnailFiles: File[] = [];
+  thumbnailFiles: File[] = [];
 
   errors: any = {};
   pricingErrors: any = {};
@@ -111,6 +111,7 @@ thumbnailFiles: File[] = [];
     }
 
     this.LoadCategories();
+    this.ViewSelectedProduct();
 
   }
   LoadCategories() {
@@ -151,7 +152,180 @@ thumbnailFiles: File[] = [];
       }
     );
   }
+  existingImageUrls: string[] = [];
+  ViewSelectedProduct() {
+    const stored = localStorage.getItem('AddProd');
 
+    let Cat_id = '';
+    let Sub_id = '';
+    let P_id = '';
+
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      Cat_id = parsed.Cat_id;
+      Sub_id = parsed.Sub_id;
+      P_id = parsed.P_id;
+    }
+
+    const payload = {
+      productID: P_id,
+      categoryID: Cat_id,
+      subCategoryID: Sub_id,
+      pageNo: 1,
+      size: 10,
+      searchText: ''
+    };
+
+    this.AdminService.showLoader.next(true);
+
+    this.AdminService.ProductsFetch(payload).subscribe(
+      (res: any) => {
+        console.log(res)
+        if (res.response === 3 && res.Products?.length) {
+
+          const product = res.Products[0]; // ✅ main product object
+
+          /* ---------------- BASIC DETAILS ---------------- */
+          this.formData.basicDetails.productName = product.productName || '';
+          this.formData.basicDetails.productHighlights = product.productHighlight || '';
+          this.formData.basicDetails.productDescription = product.productDescription || '';
+
+          // this.formData.basicDetails.category = {
+          //   id: product.categoryID,
+          //   name: product.categoryName
+          // } as Category;
+
+          // this.formData.basicDetails.subCategory = {
+          //   id: product.subCategoryID,
+          //   name: product.subCategoryName
+          // } as Subcategory;
+
+          const selectedCategory = this.categories.find(
+            cat => cat.id === product.categoryID
+          );
+
+          if (selectedCategory) {
+            this.formData.basicDetails.category = selectedCategory;
+
+            // enable subcategory dropdown
+            this.subcategories = selectedCategory.subcategories || [];
+            this.isSubCategoryEnabled = true;
+
+            // Find subcategory object
+            const selectedSubCategory = this.subcategories.find(
+              sub => sub.id === product.subCategoryID
+            );
+
+            if (selectedSubCategory) {
+              this.formData.basicDetails.subCategory = selectedSubCategory;
+            }
+          }
+          /* ---------------- PRICING ---------------- */
+          this.formData.pricing.productPrice = product.productPrice ?? null;
+          this.formData.pricing.discountedPrice = product.disCountProductprice ?? null;
+          this.formData.pricing.taxIncluded = product.taxIncludedPrice ?? true;
+
+          // Optional: extract first weight value
+          if (product.weightList?.length) {
+            const firstWeight = product.weightList[0]; // "1 kg"
+            const [weight, unit] = firstWeight.split(' ');
+            this.formData.pricing.weight = Number(weight);
+            this.formData.pricing.weightUnit = unit;
+          }
+
+          /* ---------------- EXPIRATION ---------------- */
+          this.formData.expiration.start_eph = product.expirationStartDate;
+          this.formData.expiration.end_eph = product.expirationEndDate;
+
+          this.formData.expiration.startDate =
+            this.formatEpochToDate(product.expirationStartDate);
+
+          this.formData.expiration.endDate =
+            this.formatEpochToDate(product.expirationEndDate);
+
+          /* ---------------- INVENTORY ---------------- */
+          this.formData.inventory.unlimited = product.isStockUnlimited;
+          this.formData.inventory.stockQuantity = product.isStockUnlimited
+            ? 'Unlimited'
+            : product.stockQuantity;
+
+          this.formData.inventory.stockStatus = product.stockStatus;
+          this.formData.inventory.highlight = product.isHighlightedProduct;
+
+
+          /* ---------------- PRODUCT IMAGES ---------------- */
+          this.existingImageUrls = product.productImagesList || [];
+
+          // Clear old data
+          this.thumbnailPreviews = [];
+          this.thumbnailFiles = [];
+          console.log(this.existingImageUrls)
+
+          // Add backend images as previews
+          this.existingImageUrls.forEach(img => {
+            const fullUrl = img.startsWith('http')
+              ? img
+              : `${this.baseUrl}${img}`;
+
+            this.thumbnailPreviews.push(fullUrl);
+          });
+
+          // Set main preview (first image)
+          if (this.thumbnailPreviews.length) {
+            this.selectedThumbnailIndex = 0;
+          }
+
+        }
+
+        this.AdminService.showLoader.next(false);
+      },
+      () => {
+        this.AdminService.showLoader.next(false);
+      }
+    );
+  }
+  formatEpochToDate(epoch: string): string {
+    if (!epoch) return '';
+    const d = new Date(Number(epoch));
+    return d.toISOString().split('T')[0]; // yyyy-MM-dd
+  }
+
+
+  ViewSelectedProduct2() {
+    const stored = localStorage.getItem('AddProd');
+    let Cat_id = '';
+    let Sub_id = '';
+    let P_id = '';
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      Cat_id = parsed.Cat_id;
+      Sub_id = parsed.Sub_id;
+      P_id = parsed.P_id;
+    }
+    const payload = {
+      productID: P_id,
+      categoryID: Cat_id,
+      subCategoryID: Sub_id,
+      pageNo: 1,
+      size: 10,
+      searchText: ''
+    };
+
+    this.AdminService.showLoader.next(true);
+
+    this.AdminService.ProductsFetch(payload).subscribe(
+      (res: any) => {
+        console.log(res)
+        if (res.response === 3) {
+
+        } else {
+
+        }
+        this.AdminService.showLoader.next(false);
+      }
+
+    );
+  }
   selectCategory(category: Category | null): void {
     // Reset always
     this.subcategories = [];
@@ -179,14 +353,14 @@ thumbnailFiles: File[] = [];
 
     const date = new Date(dateValue);
     date.setHours(0, 0, 0, 0);
-console.log(this.formData.expiration.startDate)
+    console.log(this.formData.expiration.startDate)
     const epoch = date.getTime(); // 13-digit epoch
     console.log(epoch); // 👉 1765804800000
 
     this.formData.expiration.start_eph = epoch.toString();
   }
 
-  
+
 
   onEndDateChange(event: Event): void {
     const dateValue = (event.target as HTMLInputElement).value; // YYYY-MM-DD
@@ -267,34 +441,47 @@ console.log(this.formData.expiration.startDate)
 
   publishProduct(): void {
     console.log('Product Data:', this.formData);
-    if (!this.validateForm()) {
-      return;
-    }
-    if (!this.validatePricingRow()) {
-      return;
-    }
-    const payload = {
-      ...this.formData,
-      images: {
-        main: this.mainImagePreview,
-        thumbnails: this.thumbnailPreviews
-      }
-    };
 
-    console.log('Final Payload:', payload);
+    //   console.log(this.thumbnailFiles)
+
+    // this.thumbnailFiles.forEach((file, index) => {
+    //   formData2.append('productimages', file);
+    // });
+
+
+    // if (!this.validateForm()) {
+    //   return;
+    // }
+    // if (!this.validatePricingRow()) {
+    //   return;
+    // }
+
+    // if (!this.validatePricingVariants()) {
+    //   return;
+    // }
 
     let formData2 = new FormData();
     const category = this.formData.basicDetails.category;
     const subCategory = this.formData.basicDetails.subCategory;
 
+    // const weightList = this.pricingVariants.map(p => ({
+    //   // weightNumber: Number(p.weight),
+    //   // weightUnit: p.weightUnit,
+    //   // productPrice: Number(p.productPrice),
+    //   // disCountProductprice: p.discountedPrice ? Number(p.discountedPrice) : null,
+
+    //     weightNumber:250,
+    //   weightUnit: 'grm',
+    //   productPrice: 400,
+    //   disCountProductprice: 10,
+
+    // }));
     const weightList = this.pricingVariants.map(p => ({
-  weight: Number(p.weight),
-  weightUnit: p.weightUnit,
-  productPrice: Number(p.productPrice),
-  discountedPrice: p.discountedPrice ? Number(p.discountedPrice) : null,
-  currency: p.currency,
-  taxIncluded: p.taxIncluded
-}));
+      productPrice: p._api.productPrice,
+      disCountProductprice: p._api.disCountProductprice,
+      weightNumber: p._api.weightNumber,
+      weightUnit: p._api.weightUnit
+    }));
 
     const conpayload = {
       productName: this.formData.basicDetails.productName,
@@ -305,8 +492,8 @@ console.log(this.formData.expiration.startDate)
       subCategoryID: subCategory?.id || '',
       subCategoryName: subCategory?.name || '',
 
-      productPrice:  Number(this.formData.pricing.productPrice) || 0,
-      taxIncludedPrice: this.formData.pricing.taxIncluded,
+      // productPrice: 0,
+      taxIncludedPrice: false,
 
       weightList: weightList,
 
@@ -320,15 +507,18 @@ console.log(this.formData.expiration.startDate)
       isStockUnlimited: this.formData.inventory.unlimited,
       stockStatus: this.formData.inventory.stockStatus,
 
-      isHighlightedProduct: this.formData.inventory.highlight
+      isHighlightedProduct: this.formData.inventory.highlight,
+      productDescription: this.formData.basicDetails.productDescription,
+      productHighlight :this.formData.basicDetails.productHighlights
+
     }
 
     let token = localStorage.getItem('token');
-    // formData2.append("productimages", this.thumbnailPreviews[]);
+    console.log(this.thumbnailFiles)
+
     this.thumbnailFiles.forEach((file, index) => {
-  formData2.append('productimages', file); 
-  // backend will receive as array
-});
+      formData2.append('productimages', file);
+    });
 
     formData2.append("productsData", JSON.stringify(conpayload));
     console.log(conpayload)
@@ -337,18 +527,20 @@ console.log(this.formData.expiration.startDate)
       (posRes: any) => {
         console.log(posRes)
         if (posRes.response == 3) {
-
+          this.openSnackBar(posRes.message, "");
+          // this.backtoProdts();
+          this.router.navigateByUrl('/admin/products');
         } else {
-          // this.openSnackBar(res.message, "");
+          this.openSnackBar(posRes.message, "");
         }
         this.AdminService.showLoader.next(false);
       }, (err: HttpErrorResponse) => {
         this.openSnackBar(err.message, "");
         this.AdminService.showLoader.next(false);
         if (err.error instanceof Error) {
-          console.warn("Client SIde Error", err.error);
+          console.warn("Client SIde Error", err);
         } else {
-          console.warn("Server Error", err.error);
+          console.warn("Server Error", err);
         }
       })
   }
@@ -358,17 +550,14 @@ console.log(this.formData.expiration.startDate)
       panelClass: "red-snackbar",
     });
   }
-  /* ---------------------------
-   * IMAGE UPLOAD HANDLERS
-   * --------------------------- */
 
   onMainImageSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
-      // Reset
-  this.thumbnailFiles = [];
-  this.thumbnailPreviews = [];
+    // Reset
+    this.thumbnailFiles = [];
+    this.thumbnailPreviews = [];
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -379,7 +568,7 @@ console.log(this.formData.expiration.startDate)
 
     reader.readAsDataURL(file);
     Array.from(files).forEach(file => {
-       this.thumbnailFiles.push(file);
+      this.thumbnailFiles.push(file);
       const reader = new FileReader();
       reader.onload = () => {
         this.thumbnailPreviews.push(reader.result as string);
@@ -393,18 +582,81 @@ console.log(this.formData.expiration.startDate)
     this.mainImagePreview = null;
   }
 
-  onThumbnailSelected(event: Event): void {
-    const files = (event.target as HTMLInputElement).files;
-    if (!files) return;
+  // onThumbnailSelected(event: Event): void {
+  //   const files = (event.target as HTMLInputElement).files;
+  //   if (!files) return;
 
-    Array.from(files).forEach(file => {
+  //   Array.from(files).forEach(file => {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.thumbnailPreviews.push(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   });
+  // }
+  //   thumbnailFiles: File[] = [];
+  // thumbnailPreviews: string[] = [];
+  onThumbnailSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    Array.from(input.files).forEach(file => {
+
+      // 🔒 Optional: prevent duplicate files
+      const alreadyExists = this.thumbnailFiles.some(
+        f => f.name === file.name && f.size === file.size
+      );
+      if (alreadyExists) {
+        return;
+      }
+
+      // ✅ APPEND (NOT RESET)
+      this.thumbnailFiles.push(file);
+
+      // preview
       const reader = new FileReader();
       reader.onload = () => {
         this.thumbnailPreviews.push(reader.result as string);
       };
       reader.readAsDataURL(file);
     });
+
+    // allow re-select same file again
+    input.value = '';
+
+    console.log('FILES →', this.thumbnailFiles);
+    console.log('COUNT →', this.thumbnailFiles.length);
   }
+
+  onThumbnailSelected2(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    // reset previous
+    this.thumbnailFiles = [];
+    this.thumbnailPreviews = [];
+
+    Array.from(input.files).forEach(file => {
+
+      // ✅ STORE FILE (IMPORTANT)
+      this.thumbnailFiles.push(file);
+
+      // preview (optional)
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.thumbnailPreviews.push(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    console.log('FILES →', this.thumbnailFiles);
+    console.log('COUNT →', this.thumbnailFiles.length);
+  }
+
   selectThumbnail(index: number): void {
     this.selectedThumbnailIndex = index;
     this.mainImagePreview = this.thumbnailPreviews[index];
@@ -462,27 +714,62 @@ console.log(this.formData.expiration.startDate)
 
     return Object.keys(this.pricingErrors).length === 0;
   }
+  // addPricing(): void {
+  //   if (!this.validatePricingRow()) {
+  //     return;
+  //   }
 
+  //   this.pricingVariants.push({
+  //     productPrice: Number(this.formData.pricing.productPrice),
+  //     disCountProductprice: this.formData.pricing.discountedPrice
+  //       ? Number(this.formData.pricing.discountedPrice)
+  //       : 0,
+  //     weightNumber: Number(this.formData.pricing.weight),
+  //     weightUnit: this.formData.pricing.weightUnit
+  //   });
 
-
+  //   this.resetPricingForm();
+  // }
   addPricing(): void {
     if (!this.validatePricingRow()) {
       return;
     }
 
     this.pricingVariants.push({
-      productPrice: this.formData.pricing.productPrice!,
-      discountedPrice: this.formData.pricing.discountedPrice ?? undefined,
-      currencyCode: this.formData.pricing.currency,
-      currencySymbol: this.formData.pricing.currencySymbol,
-      weight: this.formData.pricing.weight!,
+      // UI DISPLAY FIELDS
+      productPrice: Number(this.formData.pricing.productPrice),
+      discountedPrice: this.formData.pricing.discountedPrice
+        ? Number(this.formData.pricing.discountedPrice)
+        : null,
+      currency: this.formData.pricing.currency,
+      currencySymbol: this.getCurrencySymbol(),
+      weight: Number(this.formData.pricing.weight),
       weightUnit: this.formData.pricing.weightUnit,
-      taxIncluded: this.formData.pricing.taxIncluded
+      taxIncluded: this.formData.pricing.taxIncluded,
+
+      // API FIELDS (mapped later)
+      _api: {
+        productPrice: Number(this.formData.pricing.productPrice),
+        disCountProductprice: this.formData.pricing.discountedPrice
+          ? Number(this.formData.pricing.discountedPrice)
+          : 0,
+        weightNumber: Number(this.formData.pricing.weight),
+        weightUnit: this.formData.pricing.weightUnit
+      }
     });
 
-    // reset only FORM, not table
     this.resetPricingForm();
   }
+
+  validatePricingVariants(): boolean {
+    if (!this.pricingVariants.length) {
+      this.openSnackBar('Please add at least one pricing variant', '');
+      return false;
+    }
+    return true;
+  }
+
+
   resetPricingForm(): void {
     this.formData.pricing.productPrice = null;
     this.formData.pricing.discountedPrice = null;
@@ -512,6 +799,11 @@ console.log(this.formData.expiration.startDate)
       // Toggle OFF → Allow quantity entry
       this.formData.inventory.stockQuantity = '';
     }
+  }
+
+  backtoProdts() {
+    this.router.navigateByUrl('/admin/products');
+
   }
 
 }

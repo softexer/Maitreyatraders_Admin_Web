@@ -64,12 +64,10 @@
 
                                     <td>{{ item.orderId }}</td>
                                     <td>
-                                        <div class="product-cell">
-                                            <span class="product-image">
 
-                                                <img *ngIf="item.productImage" [src]="item.productImage"
-                                                    class="product-img" alt="product" />
-                                            </span>
+                                        <div class="product-cell">
+                                            <img *ngIf="item.productImage" [src]="item.productImage"
+                                                class="product-image" alt="product" />
                                             <span>{{ item.productName }}</span>
                                         </div>
                                     </td>
@@ -79,6 +77,25 @@
                                     </td>
                                     <td>₹{{ item.price }}</td>
                                     <td>
+
+                                        <!-- <span class="status shipped" *ngIf="item.status === 'Shipped'">
+                                            <img src="../../../assets/shippd.png"> Shipped
+                                            <div class="tracking-info" *ngIf="item.trackingdt">
+                                                <small>
+                                                    Tracking ID: <b>{{ item.trackingdt.trackingID }}</b>
+                                                </small>
+                                            </div>
+                                        </span>
+
+                                      
+                                        <span class="status delivered" *ngIf="item.status === 'Delivered'">
+                                            <img src="../../../assets/delivrd.png"> Delivered
+                                        </span>
+
+                                        
+                                        <span class="status new" *ngIf="item.status === 'New'">
+                                            <img src="../../../assets/new.png"> New
+                                        </span> -->
                                         <!-- SHIPPED -->
                                         <span class="status shipped" *ngIf="item.status === 'Shipped'">
                                             <img src="../../../assets/shippd.png"> Shipped
@@ -96,8 +113,9 @@
 
                                         <!-- NEW -->
                                         <span class="status new" *ngIf="item.status === 'New'">
-                                            <img src="../../../assets/new.png"> New
+                                            <img src="../../../assets/pending.png"> New
                                         </span>
+
                                     </td>
 
                                     <!-- <td>
@@ -181,9 +199,18 @@
                         <span class="separator">></span>
                         <span class="active">Order Details</span>
                     </div>
-                    <button class="btn-shipped" (click)="handleOrderAction()">
-                        {{ orderData.status === 'Pending' ? 'Mark as Shipped' : 'Mark as Delivered' }}
+                    <!-- <button class="btn-shipped" (click)="handleOrderAction()">
+                        {{ orderData.status === 'New' ? 'Mark as Shipped' : 'Mark as Delivered' }}
+                    </button> -->
+
+                    <button class="btn-shipped" *ngIf="orderData.status !== 'Delivered'" (click)="handleOrderAction()">
+                        {{
+                        orderData.status === 'New'
+                        ? 'Mark as Shipped'
+                        : 'Mark as Delivered'
+                        }}
                     </button>
+
 
                 </div>
             </header>
@@ -192,7 +219,7 @@
                 <div class="order-header">
                     <div class="order-id-section">
                         <h2>Orders ID: {{ orderData.orderId }}</h2>
-                        <span class="status-badge" [class.pending]="orderData.status === 'Pending'"
+                        <span class="status-badge" [class.pending]="orderData.status === 'New'"
                             [class.shipped]="orderData.status === 'Shipped'">
                             {{ orderData.status }}
                         </span>

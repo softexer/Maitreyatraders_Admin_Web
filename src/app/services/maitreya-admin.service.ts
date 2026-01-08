@@ -51,7 +51,7 @@ export class MaitreyaAdminService {
   //search
   SearchinHdr(data: any): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/api/admin/productsearch?adminuniqueID=${data.adminuniqueID}&searchText=${data.searchText}`
+      `${this.baseUrl}/api/admin/productsearch?searchText=${data.searchText}`
     );
   }
 
@@ -119,11 +119,48 @@ export class MaitreyaAdminService {
     );
   }
 
+  //Del-prod
+    DeleteProd(data: any): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        // maitreya: token,
+      }),
+      body: data,
+    };
+    return this.http.delete(`${this.baseUrl}/api/product/deleteproduct`, options);
+  }
+
+
   //Categoy-module
   //cat insert
   AddCategory(data: any): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/api/categories/categoryinsert`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+   Add_SubCategory(data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/categories/subcategoryinsert`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+    Update_SubCategory(data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/categories/subcategoryupdate`,
+      data
+      // { headers: { maitreya: token } }
+    );
+  }
+
+      Del_SubCat(data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/categories/subcategorypulldata`,
       data
       // { headers: { maitreya: token } }
     );

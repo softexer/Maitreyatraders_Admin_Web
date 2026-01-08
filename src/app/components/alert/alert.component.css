@@ -1,0 +1,27 @@
+::ng-deep .mat-dialog-container {
+    padding: 0 !important;
+    font-family: 'Alata';
+    font-weight: 400;
+    font-size: 14px;
+
+}
+
+.cancel-button,
+.yes-button {
+    font-weight: 400;
+    font-family: 'Montserrat-SemiBold';
+    padding: 8px 20px;
+    margin: 0 10px;
+    min-width: 100px;
+}
+
+.cancel-button {
+    border: 1px solid grey;
+    background-color: lightgrey;
+    color: black;
+}
+
+.yes-button {
+    background: rgba(72, 128, 255, 1);
+    color: white;
+}

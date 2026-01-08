@@ -381,7 +381,12 @@
   width: 100%;
   border-collapse: collapse;
 }
-
+.no-products {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+}
 /* .orders-table thead {
   background: #f8f9fa;
 }

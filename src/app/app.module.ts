@@ -45,6 +45,7 @@ import { CategoryAddComponent } from './components/category-add/category-add.com
 import { PromotionsComponent } from './components/promotions/promotions.component';
 import { OfferCardComponent } from './components/offer-card/offer-card.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
     PromotionsComponent,
     OfferCardComponent,
     SearchPageComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

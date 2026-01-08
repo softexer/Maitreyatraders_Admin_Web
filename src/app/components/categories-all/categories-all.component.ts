@@ -37,6 +37,7 @@ export class CategoriesAllComponent implements OnInit {
   subcategories: Subcategory[] = [];
   selectedCategory!: Category | null;
   selectedSubcategory!: Subcategory | null;
+   editsub: boolean = false;
   constructor(
     private adminService: MaitreyaAdminService,
     private router: Router,
@@ -106,10 +107,76 @@ export class CategoriesAllComponent implements OnInit {
 
 
   addSubcategory() {
-    //   if (!this.newSubcategory.trim()) return;
+    if (!this.newSubcategory.trim()) return;
+    if (!this.selectedCategory) return;
+   
 
-    //   this.subcategories[this.selectedCategory].push(this.newSubcategory);
-    //   this.newSubcategory = '';
+    console.log(this.editsub)
+
+    if (!this.editsub) {
+      console.log(this.selectedCategory)
+      let payload =
+      {
+        categoryID: this.selectedCategory.id,
+        subCategoryName: this.newSubcategory.trim()
+      }
+      console.log(payload)
+      this.adminService.Add_SubCategory(payload).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.response === 3) {
+            this.newSubcategory = '';
+            this.GetCategories();
+          } else {
+            console.error("Unexpected response:", res.message);
+            this.openSnackBar(res.message, "");
+          }
+
+          this.adminService.showLoader.next(false);
+        },
+        (err: HttpErrorResponse) => {
+          console.error("Error fetching:", err);
+          this.openSnackBar(err.message, "");
+          this.adminService.showLoader.next(false);
+        }
+      );
+    }
+    else {
+       if(!this.selectedSubcategory) return;
+      console.log(this.selectedCategory)
+      let payload =
+      // {
+      //   categoryID: this.selectedCategory.id,
+      //   subCategoryName: this.newSubcategory.trim()
+      // }
+      {
+        categoryID: this.selectedCategory.id,
+        subCategoryID: this.selectedSubcategory.id,
+        subCategoryName:this.newSubcategory
+      }
+      console.log(payload)
+      this.adminService.Update_SubCategory(payload).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.response === 3) {
+            this.newSubcategory = '';
+            this.editsub = false;
+            this.GetCategories();
+          } else {
+            console.error("Unexpected response:", res.message);
+            this.openSnackBar(res.message, "");
+          }
+
+          this.adminService.showLoader.next(false);
+        },
+        (err: HttpErrorResponse) => {
+          console.error("Error fetching:", err);
+          this.openSnackBar(err.message, "");
+          this.adminService.showLoader.next(false);
+        }
+      );
+    }
+
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
@@ -117,13 +184,44 @@ export class CategoriesAllComponent implements OnInit {
       panelClass: "red-snackbar",
     });
   }
-
+ 
   editSubcategory(sub: Subcategory) {
-    console.log(sub.id, sub.name);
+    console.log(sub);
+    this.newSubcategory = sub.name
+    this.editsub = true;
+     console.log(this.editsub)
+
+
   }
 
   deleteSubcategory(sub: Subcategory) {
-    console.log(sub.id);
+    console.log(sub);
+    if (!this.selectedCategory) return;
+       let payload = {
+        // categoryID: this.selectedCategory.id,
+         subCategoryID: sub.id,
+        //  subCategoryName: sub.name
+        }
+        console.log(payload)
+        this.adminService.Del_SubCat(payload).subscribe(
+          (res: any) => {
+            console.log(res);
+            if (res.response === 3) {
+               this.openSnackBar(res.message, "");
+              this.GetCategories();
+
+            } else {
+              console.error("Unexpected response:", res.message);
+            }
+
+            this.adminService.showLoader.next(false);
+          },
+          (err: HttpErrorResponse) => {
+            console.error("Error fetching:", err);
+            this.openSnackBar(err.message, "");
+            this.adminService.showLoader.next(false);
+          }
+        );
   }
 
 
@@ -147,15 +245,16 @@ export class CategoriesAllComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
         console.log(res)
-        let payload= {
-          categoryName:res.categoryName,
-          subcategory:[{"subCategoryName":""}]
+        let payload = {
+          categoryName: res.categoryName,
+          subcategory: [{ "subCategoryName": "" }]
         }
         this.adminService.AddCategory(payload).subscribe(
           (res: any) => {
             console.log(res);
             if (res.response === 3) {
-              
+              this.GetCategories();
+
             } else {
               console.error("Unexpected response:", res.message);
             }
@@ -163,7 +262,7 @@ export class CategoriesAllComponent implements OnInit {
             this.adminService.showLoader.next(false);
           },
           (err: HttpErrorResponse) => {
-            console.error("Error fetching:", err.message);
+            console.error("Error fetching:", err);
             this.openSnackBar(err.message, "");
             this.adminService.showLoader.next(false);
           }

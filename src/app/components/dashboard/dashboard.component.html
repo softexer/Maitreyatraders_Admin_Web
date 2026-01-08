@@ -177,6 +177,9 @@
                     </table>
                     <!-- </div> -->
                 </div>
+                <div *ngIf="recentOrders.length === 0" class="no-products">
+                    <p>No Recent Orders</p>
+                </div>
             </div>
         </div>
 

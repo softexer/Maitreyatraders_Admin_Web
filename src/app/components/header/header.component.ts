@@ -9,6 +9,7 @@ import { MaitreyaAdminService } from 'src/app/services/maitreya-admin.service';
 import { NotificationsComponent } from '../notifications/notifications.component';
 import { ChangepasswrdComponent } from '../changepasswrd/changepasswrd.component';
 import { SearchPageComponent } from '../search-page/search-page.component';
+import emailjs from '@emailjs/browser';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,11 @@ export class HeaderComponent implements OnInit {
   notificationbadge: number = 0;
   UserActiveStatus: boolean = false;
 
+  showSearch = false;
+  showNotifications = false;
+  showAdmin = false;
+  searchText: string = "";
+  displaylist: boolean = false;
   constructor(
     private adminService: MaitreyaAdminService,
     private router: Router,
@@ -33,9 +39,6 @@ export class HeaderComponent implements OnInit {
     private dialog: MatDialog,
     private eRef: ElementRef
   ) { }
-
-
-
 
   ngOnInit(): void {
     this.baseUrl = this.adminService.baseUrl;
@@ -49,22 +52,7 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = false;
       this.router.navigateByUrl('/login');
     }
-
-
   }
-
-  notification() {
-  }
-
-
-  // showNotifications = false;
-
-  showSearch = false;
-  showNotifications = false;
-  showAdmin = false;
-  searchText: string = "";
-  displaylist: boolean = false;
-
   closeAll() {
     this.showSearch = false;
     this.showNotifications = false;
@@ -83,11 +71,14 @@ export class HeaderComponent implements OnInit {
       this.closeAll();
     }
   }
+  toggleAdmin() {
+    this.closeAll();
+    this.showAdmin = !this.showAdmin;
+  }
 
   toggleSearch() {
     this.closeAll();
     this.showSearch = true;
-
   }
   AllSearchItems: Array<any> = [];
   GotoSearch() {
@@ -95,9 +86,8 @@ export class HeaderComponent implements OnInit {
       // this.displaylist = false;
       return;
     }
-
     const payload = {
-      adminuniqueID: this.user.adminuniqueID,
+      // adminuniqueID: this.user.adminuniqueID,
       searchText: this.searchText
     };
     this.displaylist = true;
@@ -107,7 +97,6 @@ export class HeaderComponent implements OnInit {
         console.log(res)
         if (res.response === 3) {
           this.AllSearchItems = res.SearchProducts || [];
-          //  this.displaylist = this.AllSearchItems.length > 0;
         } else {
           this.AllSearchItems = [];
           console.error("Unexpected response:", res.message);
@@ -120,16 +109,12 @@ export class HeaderComponent implements OnInit {
         this.adminService.showLoader.next(false);
       }
     );
-
-
   }
 
-  toggleAdmin() {
 
-    this.closeAll();
-    this.showAdmin = !this.showAdmin;
+  gotoAllProducts() {
+    this.router.navigateByUrl('/admin/products');
   }
-  gotoAllProducts() { }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 3000,
@@ -170,7 +155,14 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  ProductView(pd: any){
+  ProductView(pd: any) {
+    console.log(pd);
+    let Prod = {
+      catID: pd.categoryID,
+      SubCatID: pd.subCategoryID,
+    }
+    localStorage.setItem("HdrProdt", JSON.stringify(Prod));
+     this.router.navigateByUrl('/admin/products');
 
   }
   signout() {

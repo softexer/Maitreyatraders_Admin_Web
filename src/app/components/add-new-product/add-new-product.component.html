@@ -6,7 +6,7 @@
     <div class="breadcrumb">
       <span>Home</span>
       <span class="separator">></span>
-      <span>All Products</span>
+       <span (click)="backtoProdts()" style="cursor: pointer;">All Products</span>
       <span class="separator">></span>
       <span class="active">Add New Product</span>
     </div>
@@ -267,53 +267,7 @@
     </div>
 
     <!-- RIGHT SECTION - IMAGE UPLOAD -->
-    <!-- <div class="right-section">
-      <div class="image-upload-section">
-        <h2>Upload Product Image</h2>
-        <label class="label-text">Product Image</label>
-        <div class="main-image-container">
-          <div class="image-preview">
-            <img *ngIf="mainImagePreview" [src]="mainImagePreview" alt="Product Preview" class="preview-image" />
-            <div *ngIf="!mainImagePreview" class="placeholder-image">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-            </div>
-          </div>
-
-          <div class="button-group">
-            <label class="btn-browse">
-              Browse
-              <input type="file" accept="image/*" (change)="onMainImageSelected($event)" style="display: none" />
-            </label>
-            <button *ngIf="mainImagePreview" class="btn-replace" (click)="removeMainImage()">
-              Replace
-            </button>
-          </div>
-        </div>
-
-        <div class="thumbnails-section">
-          <div class="thumbnails-container">
-            <div *ngFor="let thumbnail of thumbnailPreviews; let i = index" class="thumbnail">
-              <img [src]="thumbnail" [alt]="'Thumbnail ' + (i + 1)" />
-              <button class="btn-remove-thumb" (click)="removeThumbnail(i)">×</button>
-            </div>
-
-            <label class="add-image-box">
-              <span class="plus-icon">+</span>
-              <span class="add-text">Add image</span>
-              <input type="file" accept="image/*" multiple (change)="onThumbnailSelected($event)"
-                style="display: none" />
-            </label>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-
-
+   
 
     <div class="right-section">
       <div class="image-upload-section">

@@ -378,25 +378,45 @@ export class OrdersComponent implements OnInit {
           this.Mainproducts = res.ordersData.map((order: any, index: number) => {
             const products = order.Products || [];
             const firstProduct = products[0] || {};
-            const tracking = order.orderTrackingDetails;
-            let displayStatus: 'New' | 'Shipped' | 'Delivered' = 'New';
-            // ✅ DECLARE FIRST
+            const tracking = order.orderTrackingDetails || {};
+
             const hasTracking =
-              tracking &&
-              tracking.trackingID &&
+              !!tracking.trackingID &&
               tracking.trackingID.trim() !== '';
 
+            let displayStatus: 'New' | 'Shipped' | 'Delivered' = 'New';
 
-            // ✅ Delivered has TOP priority
-            if (order.orderStatus === 'Completed') {
+            // 🟢 TOP PRIORITY → Delivered
+            if (order.orderStatus === 'Delivered') {
               displayStatus = 'Delivered';
             }
+            // 🟡 Second → Shipped
             else if (hasTracking) {
               displayStatus = 'Shipped';
             }
+            // 🔵 Default → New
             else {
               displayStatus = 'New';
             }
+            // const tracking = order.orderTrackingDetails;
+            // let displayStatus: 'New' | 'Shipped' | 'Delivered' = 'New';
+            // // ✅ DECLARE FIRST
+            // const hasTracking =
+            //   tracking &&
+            //   tracking.trackingID &&
+            //   tracking.trackingID.trim() !== '';
+
+
+            // // ✅ Delivered has TOP priority
+            // if (order.orderStatus === 'Completed') {
+            //   displayStatus = 'Delivered';
+            // }
+            // else if (hasTracking) {
+            //   displayStatus = 'Shipped';
+            // }
+            // else {
+            //   displayStatus = 'New';
+            // }
 
 
             const totalProductPrice = products.reduce(
@@ -578,7 +598,8 @@ export class OrdersComponent implements OnInit {
     this.selectedOrderId = item.orderId;
     this.orderData = {
       orderId: order.orderId,
-      status: item.trackingdt ? 'Shipped' : 'Pending',
+      // status: item.trackingdt ? 'Shipped' : 'New',
+       status: order.orderStatus,
 
       customer: {
         fullName: `${order.addressDetails.firstName} ${order.addressDetails.lastName}`,
@@ -627,7 +648,7 @@ export class OrdersComponent implements OnInit {
 
   handleOrderAction() {
     console.log(this.orderData.status)
-    if (this.orderData.status === 'Pending') {
+    if (this.orderData.status === 'New') {
       this.markAsShipped();
     } else if (this.orderData.status === 'Shipped') {
       this.goToDelivered();
@@ -638,6 +659,7 @@ export class OrdersComponent implements OnInit {
       adminuniqueID: this.user.adminuniqueID,
       orderId: this.selectedOrderId
     }
+    console.log(payload)
     this.AdminService.SendtoDelivery(payload).subscribe(
       (res: any) => {
         console.log(res);

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { AlertComponent } from '../alert/alert.component';
 
 interface Category {
   id: string;
@@ -58,7 +59,7 @@ export class ProductsComponent implements OnInit {
     totalItems: 0,
     totalPages: 0
   };
-baseUrl : string= '';
+  baseUrl: string = '';
 
   constructor(private productsService: MaitreyaAdminService,
     private router: Router,
@@ -69,7 +70,6 @@ baseUrl : string= '';
   ngOnInit(): void {
     this.baseUrl = this.productsService.baseUrl;
     this.GetCategories();
-    this.loadCategories();
   }
 
   GetCategories() {
@@ -92,10 +92,38 @@ baseUrl : string= '';
             }))
           }));
 
-          // Auto select first category
           if (this.categories.length) {
-            this.selectCategory(this.categories[0]);
+            const stored = localStorage.getItem('HdrProdt');
+
+            if (stored) {
+              const { catID, SubCatID } = JSON.parse(stored);
+
+              // 🔹 Find matching category
+              const matchedCategory = this.categories.find(
+                cat => cat.id === catID
+              );
+
+              if (matchedCategory) {
+                this.selectCategory(matchedCategory);
+
+                // 🔹 Find matching subcategory
+                const matchedSubCategory = matchedCategory.subcategories.find(
+                  sub => sub.id === SubCatID
+                );
+
+                if (matchedSubCategory) {
+                  this.selectSubcategory(matchedSubCategory);
+                }
+              }
+
+              // Optional: clear after use
+              localStorage.removeItem('HdrProdt');
+            } else {
+              // fallback (normal flow)
+              this.selectCategory(this.categories[0]);
+            }
           }
+
           this.pagination.currentPage = res.currentPage;
           this.pagination.totalPages = res.totalpages;
 
@@ -116,18 +144,8 @@ baseUrl : string= '';
       }
     );
   }
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 3000,
-      panelClass: "red-snackbar",
-    });
-  }
-  loadCategories(): void {
-    // this.categories = this.productsService.getCategories();
-    if (this.categories.length > 0) {
-      this.selectCategory(this.categories[0]);
-    }
-  }
+
+
 
   selectCategory(category: Category): void {
     console.log(category)
@@ -225,17 +243,60 @@ baseUrl : string= '';
 
 
 
-  editProduct(product: Product): void {
+  editProduct(product: any): void {
     console.log('Edit product:', product);
+    let selectPD = {
+      P_id: product.productID,
+      Cat_id: product.categoryID,
+      Sub_id: product.subCategoryID
+    }
+    localStorage.setItem("AddProd", JSON.stringify(selectPD));
+    this.router.navigateByUrl('/admin/products/:id')
 
   }
 
-  deleteProduct(productId: string): void {
-    if (confirm('Are you sure you want to delete this product?')) {
-      // if (this.productsService.deleteProduct(productId)) {
-      //   this.applyFilters();
-      // }
-    }
+  deleteProduct(product: any): void {
+    console.log(product)
+    const dialogRef = this.dialog.open(AlertComponent, {
+      panelClass: "col-md-3",
+      hasBackdrop: true,
+      disableClose: true,
+      data: {
+        translationKey: 'Do you want to delete this Product ?',
+        params: { userName: "" }
+      }
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        const payload = {
+          productID: product.productID,
+          categoryID: product.categoryID,
+          subCategoryID: product.subCategoryID
+        };
+        console.log(payload)
+        const token = localStorage.getItem("token");
+        this.productsService.showLoader.next(true);
+        this.productsService.DeleteProd(payload).subscribe(
+          (res: any) => {
+            console.log("Delete response:", res);
+            this.openSnackBar(res.message, "");
+            this.GetCategories();
+            if (res.response === 3) {
+              this.openSnackBar(res.message, "");
+            } else {
+              this.openSnackBar(res.message, "");
+            }
+
+            this.productsService.showLoader.next(false);
+          },
+          (err: HttpErrorResponse) => {
+            console.error("Error deleting stage:", err);
+            this.openSnackBar(err.message, "");
+            this.productsService.showLoader.next(false);
+          }
+        );
+      }
+    });
   }
 
   openAddProductModal(): void {
@@ -279,19 +340,19 @@ baseUrl : string= '';
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   }
-formatDate23(timestamp: string | number): string {
-  if (!timestamp) return '-';
+  formatDate23(timestamp: string | number): string {
+    if (!timestamp) return '-';
 
-  const date = new Date(Number(timestamp)); // 🔑 convert to number
+    const date = new Date(Number(timestamp)); // 🔑 convert to number
 
-  if (isNaN(date.getTime())) return '-';
+    if (isNaN(date.getTime())) return '-';
 
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
 
-  return `${day}-${month}-${year}`;
-}
+    return `${day}-${month}-${year}`;
+  }
 
   isCategoryActive(category: Category): boolean {
     return this.selectedCategory?.id === category.id;
@@ -350,5 +411,11 @@ formatDate23(timestamp: string | number): string {
         this.getProductsBySubCategory(this.selectedSubcategory.id);
       }
     }
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+      panelClass: "red-snackbar",
+    });
   }
 }
